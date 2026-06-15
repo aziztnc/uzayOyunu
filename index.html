@@ -35,7 +35,7 @@
             padding-top: 5px;
         }
 
-        /* 🏠 EV BUTONU: Konumu yukarıda sabitlendi */
+        /* 🏠 EV BUTONU */
         .shop-btn {
             position: absolute;
             top: -22px; 
@@ -222,13 +222,13 @@
             flex-wrap: wrap;
         }
 
-        /* 🌟 SEÇİM KARTLARI YENİDEN BOYUTLANDIRILDI */
+        /* SEÇİM KARTLARI */
         .card {
             background: #1e293b;
             border: 2px solid #3b82f6;
             border-radius: 12px;
             padding: 16px 12px;
-            width: 155px; /* Kartlar biraz genişletildi */
+            width: 155px;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
@@ -245,16 +245,15 @@
         .card.epic { border-color: #a855f7; box-shadow: 0 0 12px rgba(168, 85, 247, 0.5); }
         .card.legendary { border-color: #f59e0b; box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
 
-        /* Kart İçindeki Yazı Boyutları Büyütüldü */
         .card-title { 
-            font-size: 14px; /* 12px'den yükseltildi */
+            font-size: 14px; 
             font-weight: 900; 
             margin-bottom: 8px;
             letter-spacing: 0.5px;
         }
         .card-desc { 
-            font-size: 13px; /* 10px'den ciddi oranda büyütüldü */
-            color: #e2e8f0;  /* Daha açık ve görünür bir gri yapıldı */
+            font-size: 13px; 
+            color: #e2e8f0;  
             font-weight: bold;
             line-height: 1.4;
         }
@@ -449,7 +448,6 @@ function updateUI() {
         const secondsLeft = Math.ceil(powerUpTimer / 60);
         if (activePowerUp === "TRIPLE_SHOT") pStatus.innerText = `🔥 ÜÇLÜ ATEŞ (${secondsLeft}s)`;
         if (activePowerUp === "RAPID_FIRE") pStatus.innerText = `⚡ HIZLI ATEŞ (${secondsLeft}s)`;
-        pStatus.style.color = "#f59e0b";
     } else {
         pStatus.innerText = "ÖZELLİK: YOK";
         pStatus.style.color = "#9ca3af";
@@ -593,16 +591,31 @@ function update() {
         }
     }
 
+    // Geliştirme / Can Kutularını Toplama Kontrolü
     for (let i = droppedPowerUps.length - 1; i >= 0; i--) {
         let pot = droppedPowerUps[i];
         pot.y += 1.8; 
         if (pot.y > canvas.height) { droppedPowerUps.splice(i, 1); continue; }
 
+        // Gemiyle temas kontrolü
         if (pot.x + pot.size > player.x && pot.x < player.x + player.width &&
             pot.y + pot.size > player.y && pot.y < player.y + player.height) {
-            activePowerUp = pot.type;
-            powerUpTimer = 300; 
-            createParticles(pot.x + pot.size/2, pot.y + pot.size/2, "#f59e0b", 10);
+            
+            if (pot.type === "HEAL") {
+                // Can doldurma mekaniği
+                if (lives < 3) {
+                    lives++;
+                } else {
+                    score += 50; // Can zaten doluysa ekstra skor verir
+                }
+                createParticles(pot.x + pot.size/2, pot.y + pot.size/2, "#22c55e", 12);
+            } else {
+                // Normal Güçlendiriciler (Üçlü Ateş / Hızlı Ateş)
+                activePowerUp = pot.type;
+                powerUpTimer = 300; 
+                createParticles(pot.x + pot.size/2, pot.y + pot.size/2, "#f59e0b", 10);
+            }
+            
             shakeIntensity = 4;
             updateUI();
             droppedPowerUps.splice(i, 1);
@@ -681,15 +694,22 @@ function update() {
                         }
                     }
                     
-                    const dropChance = invader.isLeader ? 0.25 : 0.03;
-                    if (Math.random() < dropChance) {
-                        const types = ["TRIPLE_SHOT", "RAPID_FIRE"];
-                        droppedPowerUps.push({
-                            x: invader.x + invaderWidth/2 - 6,
-                            y: invader.y + invaderHeight,
-                            size: 13,
-                            type: types[Math.floor(Math.random() * types.length)]
-                        });
+                    // ÖDÜL DÜŞME MEKANİZMASI (Geliştirildi)
+                    const rand = Math.random();
+                    if (invader.isLeader) {
+                        if (rand < 0.10) { // Lider zombiden %10 şansla CAN düşer
+                            droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 14, type: "HEAL" });
+                        } else if (rand < 0.35) { // %25 şansla diğer silahlar düşer
+                            const types = ["TRIPLE_SHOT", "RAPID_FIRE"];
+                            droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 13, type: types[Math.floor(Math.random() * types.length)] });
+                        }
+                    } else {
+                        if (rand < 0.02) { // Normal zombiden %2 NADİR şansla CAN düşer
+                            droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 14, type: "HEAL" });
+                        } else if (rand < 0.05) { // %3 şansla silah düşer
+                            const types = ["TRIPLE_SHOT", "RAPID_FIRE"];
+                            droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 13, type: types[Math.floor(Math.random() * types.length)] });
+                        }
                     }
                 }
                 updateUI();
@@ -848,12 +868,21 @@ function draw() {
     ctx.shadowColor = ctx.fillStyle;
     bullets.forEach(bullet => { ctx.fillRect(bullet.x, bullet.y, 3.5, 10); });
 
+    // Kutuların Çizilmesi (Can kutusu dahil)
     droppedPowerUps.forEach(pot => {
-        ctx.fillStyle = pot.type === "TRIPLE_SHOT" ? "#f59e0b" : "#a855f7";
-        ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10;
-        ctx.fillRect(pot.x, pot.y, pot.size, pot.size);
-        ctx.fillStyle = "#ffffff"; ctx.font = "bold 10px monospace";
-        ctx.fillText(pot.type === "TRIPLE_SHOT" ? "T" : "H", pot.x + 3, pot.y + 10);
+        if (pot.type === "HEAL") {
+            ctx.fillStyle = "#22c55e"; // Can kutusu yeşil renkte parlar
+            ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12;
+            ctx.fillRect(pot.x, pot.y, pot.size, pot.size);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 11px monospace";
+            ctx.fillText("♥", pot.x + 2, pot.y + 11);
+        } else {
+            ctx.fillStyle = pot.type === "TRIPLE_SHOT" ? "#f59e0b" : "#a855f7";
+            ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10;
+            ctx.fillRect(pot.x, pot.y, pot.size, pot.size);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 10px monospace";
+            ctx.fillText(pot.type === "TRIPLE_SHOT" ? "T" : "H", pot.x + 3, pot.y + 10);
+        }
     });
 
     invaderBullets.forEach(ib => {
@@ -922,7 +951,7 @@ function fireBullet() {
     }
 }
 
-// KLAVYE
+// KLAVYE KONTROLLERİ
 document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") keys.ArrowLeft = true;
     if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.ArrowRight = true;
