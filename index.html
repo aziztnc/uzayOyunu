@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>3D İsim Zarı & Zombie Crisis</title>
+<title>Uygulama Dünyası</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* --- ORTAK SIFIRLAMA --- */
+/* --- ORTAK SIFIRLAMA VE TEMEL STİLLER --- */
 *{
     margin:0;
     padding:0;
@@ -16,6 +16,13 @@
     font-family:'Inter',sans-serif;
     user-select: none;
     -webkit-user-select: none;
+}
+
+body {
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Sayfa Bölümleri Yönetimi */
@@ -29,147 +36,238 @@
     display: block;
 }
 
-/* ========================================== */
-/* 🎲 SAYFA 1: 3D İSİM ZARI STİLLERİ          */
-/* ========================================== */
-#page-dice {
-    background:linear-gradient(135deg,#f8fafc,#dbeafe);
-    color:#0f172a;
-}
-
-#page-dice .navbar{
-    height:80px;
-    background:white;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 8%;
-    box-shadow:0 2px 20px rgba(0,0,0,.05);
-}
-
-#page-dice .logo{
-    font-size:28px;
-    font-weight:800;
-    color:#2563eb;
-}
-
-/* ZOMBIE OYUNUNA GEÇİŞ BUTONU */
-.btn-go-zombie {
-    background: linear-gradient(135deg, #ef4444, #991b1b);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 15px;
+/* Geri Dön / Ana Menü Buton Stili (Oyunların İçindeki Üst Buton) */
+.btn-main-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #475569;
+    color: #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-    transition: all 0.2s ease;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
+}
+.btn-main-menu:hover {
+    background: #1e293b;
+    border-color: #3b82f6;
+}
+.btn-main-menu:active { transform: scale(0.95); }
+
+
+/* ========================================== */
+/* 📱 SAYFA 1: ANA MENÜ (UYGULAMA DÜNYASI)     */
+/* ========================================== */
+#page-menu {
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-.btn-go-zombie:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+#page-menu .menu-container {
+    text-align: center;
+    max-width: 1000px;
+    width: 100%;
 }
 
-.btn-go-zombie:active {
-    transform: scale(0.95);
+#page-menu h1 {
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(to right, #38bdf8, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
 }
 
-#page-dice .hero{
-    text-align:center;
-    padding:80px 20px 30px;
+#page-menu p {
+    color: #64748b;
+    font-size: 16px;
+    margin-bottom: 40px;
+    font-weight: 500;
 }
 
-#page-dice .hero h1{
-    font-size:60px;
-    margin-bottom:15px;
+#page-menu .apps-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
-#page-dice .hero p{
-    color:#64748b;
-    font-size:18px;
+#page-menu .app-card {
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 24px;
+    padding: 40px 30px;
+    width: 320px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
 }
 
-#page-dice .section{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:40px 20px;
+#page-menu .app-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 20px 40px rgba(56, 189, 248, 0.1);
 }
 
-#page-dice .card{
-    background:white;
-    padding:50px;
-    border-radius:30px;
-    box-shadow:0 20px 60px rgba(0,0,0,.08);
+#page-menu .app-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
 }
 
-#page-dice .scene{
-    width:220px;
-    height:220px;
+#page-menu .app-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 12px;
+}
+
+#page-menu .app-desc {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+
+/* ========================================== */
+/* 🎲 SAYFA 2: 3D İSİM ZARI STİLLERİ          */
+/* ========================================== */
+#page-dice {
+    background: linear-gradient(135deg, #f8fafc, #dbeafe);
+    color: #0f172a;
+    position: relative;
+}
+
+#page-dice .navbar {
+    height: 80px;
+    background: white;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 8%;
+    box-shadow: 0 2px 20px rgba(0,0,0,.05);
+}
+
+#page-dice .logo-placeholder {
+    font-size: 24px;
+    font-weight: 800;
+    color: #2563eb;
+    margin-right: auto;
+    padding-left: 110px; /* Menü butonuna yer açmak için */
+}
+
+#page-dice .hero {
+    text-align: center;
+    padding: 80px 20px 30px;
+}
+
+#page-dice .hero h1 {
+    font-size: 60px;
+    margin-bottom: 15px;
+    color: #0f172a;
+}
+
+#page-dice .hero p {
+    color: #64748b;
+    font-size: 18px;
+}
+
+#page-dice .section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+#page-dice .card {
+    background: white;
+    padding: 50px;
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.08);
+}
+
+#page-dice .scene {
+    width: 220px;
+    height: 220px;
     perspective:1000px;
     margin:auto;
 }
 
-#page-dice .cube{
-    width:100%;
-    height:100%;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:transform 1.5s ease;
-    cursor:pointer;
+#page-dice .cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1.5s ease;
+    cursor: pointer;
 }
 
-#page-dice .face{
-    position:absolute;
-    width:220px;
-    height:220px;
-    background:white;
-    border:3px solid #e2e8f0;
-    border-radius:25px;
-    box-shadow:0 15px 40px rgba(0,0,0,.1);
+#page-dice .face {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: white;
+    border: 3px solid #e2e8f0;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.1);
 }
 
-#page-dice .dot{
-    width:22px;
-    height:22px;
-    background:#0f172a;
-    border-radius:50%;
-    position:absolute;
+#page-dice .dot {
+    width: 22px;
+    height: 22px;
+    background: #0f172a;
+    border-radius: 50%;
+    position: absolute;
 }
 
-#page-dice .center{ top:50%; left:50%; transform:translate(-50%,-50%); }
-#page-dice .top-left{top:20px;left:20px;}
-#page-dice .top-right{top:20px;right:20px;}
-#page-dice .middle-left{ top:50%; left:20px; transform:translateY(-50%); }
-#page-dice .middle-right{ top:50%; right:20px; transform:translateY(-50%); }
-#page-dice .bottom-left{bottom:20px;left:20px;}
-#page-dice .bottom-right{bottom:20px;right:20px;}
+#page-dice .center { top:50%; left:50%; transform:translate(-50%,-50%); }
+#page-dice .top-left { top:20px; left:20px; }
+#page-dice .top-right { top:20px; right:20px; }
+#page-dice .middle-left { top:50%; left:20px; transform:translateY(-50%); }
+#page-dice .middle-right { top:50%; right:20px; transform:translateY(-50%); }
+#page-dice .bottom-left { bottom:20px; left:20px; }
+#page-dice .bottom-right { bottom:20px; right:20px; }
 
-#page-dice .front{transform:translateZ(110px);}
-#page-dice .back{transform:rotateY(180deg) translateZ(110px);}
-#page-dice .right{transform:rotateY(90deg) translateZ(110px);}
-#page-dice .left{transform:rotateY(-90deg) translateZ(110px);}
-#page-dice .top{transform:rotateX(90deg) translateZ(110px);}
-#page-dice .bottom{transform:rotateX(-90deg) translateZ(110px);}
+#page-dice .front { transform:translateZ(110px); }
+#page-dice .back { transform:rotateY(180deg) translateZ(110px); }
+#page-dice .right { transform:rotateY(90deg) translateZ(110px); }
+#page-dice .left { transform:rotateY(-90deg) translateZ(110px); }
+#page-dice .top { transform:rotateX(90deg) translateZ(110px); }
+#page-dice .bottom { transform:rotateX(-90deg) translateZ(110px); }
 
-#page-dice .name{
-    text-align:center;
-    margin-top:40px;
-    font-size:34px;
-    font-weight:800;
-    color:#2563eb;
+#page-dice .name {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 34px;
+    font-weight: 800;
+    color: #2563eb;
 }
 
-#page-dice .info{ text-align:center; margin-top:10px; color:#64748b; }
-#page-dice .footer{ text-align:center; padding:60px 20px; color:#94a3b8; }
+#page-dice .info { text-align:center; margin-top:10px; color:#64748b; }
+#page-dice .footer { text-align:center; padding:60px 20px; color:#94a3b8; }
+
 
 /* ========================================== */
-/* 👾 SAYFA 2: ZOMBIE CRISIS OYUNU STİLLERİ   */
+/* 👾 SAYFA 3: ZOMBIE CRISIS OYUNU STİLLERİ   */
 /* ========================================== */
 #page-zombie {
     background: #05070c;
@@ -179,27 +277,9 @@
     align-items: center;
     justify-content: center;
     touch-action: none;
-    padding-top: 40px;
+    padding-top: 50px;
+    position: relative;
 }
-
-/* Zardan Gelen Geri Dön Butonu */
-.btn-back-to-dice {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: #1e293b;
-    border: 2px solid #475569;
-    color: #e2e8f0;
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: all 0.2s;
-}
-.btn-back-to-dice:active { transform: scale(0.95); }
 
 #page-zombie .header {
     text-align: center; margin-bottom: 10px; position: relative; width: 95vw; max-width: 600px; padding-top: 5px;
@@ -256,19 +336,39 @@
     #page-dice .left{transform:rotateY(-90deg) translateZ(90px);}
     #page-dice .top{transform:rotateX(90deg) translateZ(90px);}
     #page-dice .bottom{transform:rotateX(-90deg) translateZ(90px);}
+    #page-dice .logo-placeholder { padding-left: 0; margin-top: 40px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ================================================================= -->
-<!-- 🎲 SAKLANAN/GÖSTERİLEN BÖLÜM 1: 3D İSİM ZARI (İLK AÇILAN EKRAN)     -->
-<!-- ================================================================= -->
-<div id="page-dice" class="page-section active">
+<div id="page-menu" class="page-section active">
+    <div class="menu-container">
+        <h1>Uygulama Dünyası</h1>
+        <p>Lütfen oynamak veya kullanmak istediğiniz uygulamayı seçin</p>
+        
+        <div class="apps-grid">
+            <div class="app-card" onclick="navigateTo('dice')">
+                <div class="app-icon">🎲</div>
+                <div class="app-title">3D İsim Zarı</div>
+                <div class="app-desc">Zarı sallayın ve listelenen şanslı isimlerden birini tamamen rastgele seçin!</div>
+            </div>
+
+            <div class="app-card" onclick="navigateTo('zombie')">
+                <div class="app-icon">👾</div>
+                <div class="app-title">Zombie Crisis</div>
+                <div class="app-desc">Zombi istilasına karşı uzay geminizle savaşın, yeni gemiler alın ve hayatta kalın!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="page-dice" class="page-section">
+    <button class="btn-main-menu" onclick="navigateTo('menu')">◀ Ana Menü</button>
+
     <header class="navbar">
-        <div class="logo">🎲 İsim Zarı</div>
-        <!-- 🔴 DİĞER SAYFAYA GEÇİŞ BUTONU -->
-        <button class="btn-go-zombie" onclick="navigateTo('zombie')">👾 Zombie Crisis Oyna</button>
+        <div class="logo-placeholder">🎲 İsim Zarı</div>
     </header>
 
     <section class="hero">
@@ -280,20 +380,14 @@
         <div class="card">
             <div class="scene">
                 <div class="cube" id="cube">
-                    <!-- 1 -->
                     <div class="face front"><div class="dot center"></div></div>
-                    <!-- 6 -->
                     <div class="face back">
                         <div class="dot top-left"></div><div class="dot middle-left"></div><div class="dot bottom-left"></div>
                         <div class="dot top-right"></div><div class="dot middle-right"></div><div class="dot bottom-right"></div>
                     </div>
-                    <!-- 3 -->
                     <div class="face right"><div class="dot top-left"></div><div class="dot center"></div><div class="dot bottom-right"></div></div>
-                    <!-- 4 -->
                     <div class="face left"><div class="dot top-left"></div><div class="dot top-right"></div><div class="dot bottom-left"></div><div class="dot bottom-right"></div></div>
-                    <!-- 5 -->
                     <div class="face top"><div class="dot top-left"></div><div class="dot top-right"></div><div class="dot center"></div><div class="dot bottom-left"></div><div class="dot bottom-right"></div></div>
-                    <!-- 2 -->
                     <div class="face bottom"><div class="dot top-left"></div><div class="dot bottom-right"></div></div>
                 </div>
             </div>
@@ -306,12 +400,8 @@
 </div>
 
 
-<!-- ================================================================= -->
-<!-- 👾 SAKLANAN/GÖSTERİLEN BÖLÜM 2: ZOMBIE CRISIS (BUTONA BASINCA)    -->
-<!-- ================================================================= -->
 <div id="page-zombie" class="page-section">
-    <!-- 🎲 ZAR SAYFASINA GERİ DÖNÜŞ BUTONU -->
-    <button class="btn-back-to-dice" onclick="navigateTo('dice'); stopZombieGame();">🎲 Zar Sayfasına Dön</button>
+    <button class="btn-main-menu" onclick="navigateTo('menu'); stopZombieGame();">◀ Ana Menü</button>
 
     <div class="header">
         <h1 style="margin: 0; font-size: 22px; color: #ef4444; letter-spacing: 3px; text-shadow: 0 0 10px rgba(239,68,68,0.5);">ZOMBIE CRISIS</h1>
@@ -374,26 +464,30 @@
     </div>
 </div>
 
+
 <script>
 /* ================================================================= */
-/* 🔄 SAYFA GEÇİŞ SİSTEMİ                                            */
+/* 🔄 EKRANLAR ARASI GEÇİŞ SİSTEMİ                                   */
 /* ================================================================= */
 function navigateTo(targetPage) {
-    // Tüm bölümleri gizle
+    // Tüm sayfaları gizle
     document.querySelectorAll('.page-section').forEach(section => {
         section.classList.remove('active');
     });
 
-    if (targetPage === 'dice') {
+    // İstenen sayfayı aktif et
+    if (targetPage === 'menu') {
+        document.getElementById('page-menu').classList.add('active');
+    } else if (targetPage === 'dice') {
         document.getElementById('page-dice').classList.add('active');
     } else if (targetPage === 'zombie') {
         document.getElementById('page-zombie').classList.add('active');
-        initGame(); // Zombie Crisis sayfasına geçildiğinde oyunu sıfırdan başlatır
+        initGame(); // Zombie Crisis sayfasına girilince oyunu sıfırdan başlatır
     }
 }
 
 /* ================================================================= */
-/* 🎲 1. UYGULAMA: 3D İSİM ZARI LOGIC                                   */
+/* 🎲 1. UYGULAMA LOGIC: 3D İSİM ZARI KODLARI                        */
 /* ================================================================= */
 const cube = document.getElementById("cube");
 const nameText = document.getElementById("name");
@@ -419,7 +513,7 @@ cube.addEventListener("click",()=>{
 });
 
 /* ================================================================= */
-/* 👾 2. UYGULAMA: ZOMBIE CRISIS OYUN MOTORU                         */
+/* 👾 2. UYGULAMA LOGIC: ZOMBIE CRISIS OYUN MOTORU KODLARI            */
 /* ================================================================= */
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -849,7 +943,7 @@ document.addEventListener("keyup", (e) => {
     if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.ArrowRight = false;
 });
 
-// MOBIL BUTON EVENTLERI
+// MOBIL KONTROL EVENTLERI
 document.getElementById("btnLeft").addEventListener("touchstart", (e) => { e.preventDefault(); moveLeftActive = true; });
 document.getElementById("btnLeft").addEventListener("touchend", () => moveLeftActive = false);
 document.getElementById("btnLeft").addEventListener("mousedown", () => moveLeftActive = true);
