@@ -3,138 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Uygulama Dünyası - Çoklu Platform</title>
+    <title>Uygulama Dünyası - 3 Oyun Bir Arada</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        /* Genel Ayarlar ve Mobil Optimizasyon */
+        /* --- GENEL SIFIRLAMA VE ORTAK STİLLER --- */
         * {
-            touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
             user-select: none;
             -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            box-sizing: border-box;
+            touch-action: manipulation;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: #0f1424;
-            font-family: 'Arial', sans-serif;
-            color: #ffffff;
-            min-height: 100vh;
+            background: #0f172a;
+            color: #e2e8f0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Sayfanın aşağı kaymasını tamamen engeller */
         }
 
-        /* ANA MENÜ (DASHBOARD) TASARIMI */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .dashboard-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #4facfe, #00f2fe, #bc41f2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .dashboard-subtitle {
-            color: #8a9fc4;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 10px;
-        }
-
-        .card {
-            background: #192239;
-            border: 2px solid #233051;
-            border-radius: 15px;
-            padding: 30px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: #00f2fe;
-            box-shadow: 0 15px 30px rgba(0, 242, 254, 0.2);
-        }
-
-        .card-icon {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            margin: 10px 0;
-            font-size: 1.4rem;
-            color: #ffffff;
-        }
-
-        .card p {
-            color: #8a9fc4;
-            font-size: 0.95rem;
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        /* TAM EKRAN UYGULAMA PENCERELERİ */
-        .app-window {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #0f1424;
-            z-index: 100;
-            overflow-y: auto;
-            padding: 20px;
+        /* Sayfa Bölümü Yönetimi: Sadece aktif olan ekran görünür */
+        .page-section {
             display: none;
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        .back-btn {
+        .page-section.active {
+            display: flex; 
+            flex-direction: column;
+        }
+
+        /* Sol Üst Köşedeki Geri Dön / Ana Menü Buton Stili */
+        .btn-main-menu {
             position: absolute;
             top: 20px;
             left: 20px;
-            background: #ff5e57;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #475569;
+            color: #e2e8f0;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            z-index: 101;
-            box-shadow: 0 4px 12px rgba(255, 94, 87, 0.3);
-            transition: background 0.2s;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-main-menu:hover {
+            background: #1e293b;
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        .btn-main-menu:active { transform: scale(0.95); }
+
+        /* ========================================== */
+        /* 📱 BÖLÜM 1: ANA MENÜ (UYGULAMA DÜNYASI)     */
+        /* ========================================== */
+        #page-menu {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
         }
 
-        .back-btn:hover {
-            background: #ff3b30;
+        #page-menu .menu-container {
+            text-align: center;
+            max-width: 1100px;
+            width: 100%;
         }
 
-        /* --- 1. OYUN ALANI (CANVAS) STİLLERİ --- */
-        .game-wrapper {
+        #page-menu h1 {
+            font-size: 38px;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        #page-menu p {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+
+        #page-menu .apps-grid {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-            position: absolute;
-            top: 0; left: 0;
+            gap: 25px;
+            flex-wrap: wrap;
+            width: 100%;
         }
 
-        canvas {
+        #page-menu .app-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            padding: 35px 25px;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        #page-menu .app-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 15px 35px rgba(56, 189, 248, 0.15);
+        }
+
+        #page-menu .app-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        #page-menu .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 10px;
+        }
+
+        #page-menu .app-desc {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* ========================================== */
+        /* 🎲 BÖLÜM 2: 3D İSİM ZARI STİLLERİ          */
+        /* ========================================== */
+        #page-dice {
+            background: linear-gradient(135deg, #f8fafc, #dbeafe);
+            color: #0f172a;
+            justify-content: flex-start;
+        }
+
+        #page-dice .navbar {
+            height: 75px;
+            width: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+            box-shadow: 0 2px 20px rgba(0,0,0,.05);
+        }
+
+        #page-dice .logo-placeholder {
+            font-size: 22px;
+            font-weight: 800;
+            color: #2563eb;
+            margin-left: auto;
+        }
+
+        #page-dice .hero {
+            text-align: center;
+            padding: 40px 20px 10px;
+        }
+
+        #page-dice .hero h1 { font-size: 42px; margin-bottom: 8px; color: #0f172a; font-weight: 800; }
+        #page-dice .hero p { color: #64748b; font-size: 15px; }
+
+        #page-dice .section { display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 10px; }
+        #page-dice .card { background: white; padding: 35px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,.08); text-align: center; }
+
+        #page-dice .scene { width: 180px; height: 180px; perspective: 1000px; margin: auto; }
+        #page-dice .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.5s ease; cursor: pointer; }
+        #page-dice .face { position: absolute; width: 180px; height: 180px; background: white; border: 3px solid #e2e2e2; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,.1); }
+
+        #page-dice .dot { width: 18px; height: 18px; background: #0f172a; border-radius: 50%; position: absolute; }
+        #page-dice .center { top:50%; left:50%; transform:translate(-50%,-50%); }
+        #page-dice .top-left { top:18px; left:18px; }
+        #page-dice .top-right { top:18px; right:18px; }
+        #page-dice .middle-left { top:50%; left:18px; transform:translateY(-50%); }
+        #page-dice .middle-right { top:50%; right:18px; transform:translateY(-50%); }
+        #page-dice .bottom-left { bottom:18px; left:18px; }
+        #page-dice .bottom-right { bottom:18px; right:18px; }
+
+        #page-dice .front { transform:translateZ(90px); }
+        #page-dice .back { transform:rotateY(180deg) translateZ(90px); }
+        #page-dice .right { transform:rotateY(90deg) translateZ(90px); }
+        #page-dice .left { transform:rotateY(-90deg) translateZ(90px); }
+        #page-dice .top { transform:rotateX(90deg) translateZ(90px); }
+        #page-dice .bottom { transform:rotateX(-90deg) translateZ(90px); }
+
+        #page-dice .name { font-size: 32px; font-weight: 800; color: #2563eb; margin-top: 25px; height: 40px; }
+        #page-dice .info { color: #64748b; font-size: 14px; margin-top: 5px; }
+        #page-dice .footer { text-align: center; padding: 20px; color: #94a3b8; font-size: 13px; }
+
+        /* ========================================== */
+        /* 👾 BÖLÜM 3: ZOMBIE CRISIS OYUNU STİLLERİ   */
+        /* ========================================== */
+        #page-zombie {
+            background: #05070c;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 70px;
+        }
+
+        #page-zombie .header {
+            text-align: center; margin-bottom: 8px; position: relative; width: 95vw; max-width: 600px;
+        }
+        #page-zombie .shop-btn {
+            position: absolute; top: -5px; right: 0; background: #1e293b; border: 2px solid #38bdf8;
+            color: #38bdf8; font-size: 20px; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99;
+        }
+        #page-zombie .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; margin-top: 10px;
+        }
+        #page-zombie .stat-box {
+            background: #0f172a; border: 2px solid #334155; padding: 8px 2px; border-radius: 10px; text-align: center;
+            font-size: 12px; font-weight: bold; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
+        }
+        #page-zombie .stat-box.box-live { border-color: #22c55e; }
+        #page-zombie .stat-box.box-score { border-color: #38bdf8; }
+        #page-zombie .stat-box.box-coin { border-color: #f59e0b; }
+        #page-zombie .stat-box.box-wave { border-color: #ef4444; }
+        #page-zombie .stat-label { font-size: 9px; color: #9ca3af; font-weight: 800; }
+        #page-zombie .stat-val { font-size: 13px; font-weight: 800; }
+        #page-zombie .score-val { color: #38bdf8; }
+        #page-zombie .coin-val { color: #f59e0b; }
+        #page-zombie .wave-val { color: #ef4444; }
+
+        #page-zombie #powerup-status {
+            font-size: 14px; color: #f59e0b; font-weight: 900; height: 18px; margin-top: 6px; text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+        }
+        #page-zombie #game-wrapper { position: relative; width: 95vw; max-width: 600px; height: 78vw; max-height: 440px; transition: transform 0.05s ease-in-out; }
+        #page-zombie #game-container { width: 100%; height: 100%; background: #020617; border: 3px solid #1e293b; border-radius: 12px; overflow: hidden; position: relative; }
+        #page-zombie canvas { display: block; width: 100%; height: 100%; background: #04060e; }
+
+        #page-zombie #controls { display: flex; justify-content: space-between; align-items: center; width: 95vw; max-width: 600px; margin-top: 12px; gap: 12px; padding-bottom: 15px; flex-grow: 1; }
+        #page-zombie .move-buttons { display: flex; gap: 12px; }
+        #page-zombie .btn { background: #1e293b; border: 2px solid #334155; color: white; font-size: 22px; font-weight: bold; width: 65px; height: 65px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        #page-zombie .btn:active { background: #3b82f6; border-color: #60a5fa; }
+        #page-zombie .btn-fire { background: #ef4444; border-color: #b91c1c; flex-grow: 1; font-size: 18px; border-radius: 14px; height: 65px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; cursor: pointer;}
+        #page-zombie .btn-fire:active { background: #dc2626; }
+
+        #page-zombie .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; display: none; }
+        #page-zombie .cards-container { display: flex; gap: 12px; margin-top: 15px; width: 95%; justify-content: center; flex-wrap: wrap; }
+        #page-zombie .card { background: #1e293b; border: 2px solid #3b82f6; border-radius: 12px; padding: 14px 10px; width: 140px; text-align: center; cursor: pointer; }
+        #page-zombie .card.equipped { border-color: #10b981 !important; background: #064e3b !important; }
+        #page-zombie .card.epic { border-color: #a855f7; }
+        #page-zombie .card.legendary { border-color: #f59e0b; }
+        #page-zombie .card-title { font-size: 13px; font-weight: 900; margin-bottom: 6px; }
+        #page-zombie .card-desc { font-size: 11px; color: #cbd5e1; }
+        #page-zombie .card-price { font-size: 12px; color: #f59e0b; font-weight: bold; margin-top: 4px; display: inline-block; }
+        #page-zombie .btn-close, #page-zombie .btn-restart { margin-top: 15px; background: #ef4444; border: none; color: white; padding: 8px 22px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #page-zombie .btn-restart { background: #3b82f6; }
+
+        /* ========================================== */
+        /* 😎 BÖLÜM 4: FLAPPY KAAN OYUNU STİLLERİ      */
+        /* ========================================== */
+        #page-flappy {
+            background: #1a1a1a;
+            align-items: center;
+            justify-content: center;
+        }
+        #page-flappy canvas {
             display: block;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border-radius: 10px;
@@ -142,469 +288,639 @@
             max-height: 100vh;
             object-fit: contain;
         }
-
-        /* --- 2. HESAP MAKİNESİ STİLLERİ --- */
-        .calc-container, .currency-container {
-            max-width: 420px;
-            margin: 80px auto 40px auto;
-            background: #192239;
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #233051;
-            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-        }
-
-        #calcDisplay {
-            width: 100%;
-            height: 65px;
-            background: #090d16;
-            border: 1px solid #233051;
-            color: #fff;
-            font-size: 2.2rem;
-            text-align: right;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
-
-        .calc-grid button {
-            padding: 18px;
-            font-size: 1.3rem;
-            border: none;
-            border-radius: 8px;
-            background: #253152;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.1s;
-        }
-
-        .calc-grid button:active { background: #324370; }
-        .calc-grid button.btn-op { background: #e0af68; color: #1a1b26; }
-        .calc-grid button.btn-clear { background: #f7768e; color: white; }
-        .calc-grid button.btn-equal { background: #9ece6a; color: #1a1b26; grid-row: span 2; height: 100%; }
-
-        .binary-section {
-            margin-top: 25px;
-            border-top: 2px solid #233051;
-            padding-top: 20px;
-        }
-
-        .binary-section input, .input-group input, .input-group select, .manual-rates input {
-            width: 100%;
-            padding: 12px;
-            background: #090d16;
-            border: 1px solid #233051;
-            color: white;
-            border-radius: 8px;
-            font-size: 1rem;
-            margin-top: 8px;
-        }
-
-        .bin-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .bin-buttons button {
-            flex: 1;
-            padding: 12px;
-            background: #4facfe;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .conversion-result {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #9ece6a;
-            font-size: 1.2rem;
-            text-align: center;
-        }
-
-        /* --- 3. DÖVİZ ÇEVİRİCİ STİLLERİ --- */
-        .input-group { margin-bottom: 18px; }
-        .input-group label { color: #8a9fc4; font-size: 0.95rem; }
-        
-        .currency-result-box {
-            background: #233051;
-            padding: 18px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.5rem;
-            color: #9ece6a;
-            font-weight: bold;
-            margin: 25px 0;
-            border: 1px solid #00f2fe;
-        }
-
-        .manual-rates {
-            border-top: 2px solid #233051;
-            padding-top: 20px;
-            color: #8a9fc4;
-        }
-        .manual-rates h4 { margin-top: 0; color: white; }
     </style>
 </head>
 <body>
 
-<div id="mainDashboard" class="dashboard-container">
-    <div class="dashboard-title">Uygulama Dünyası</div>
-    <div class="dashboard-subtitle">Lütfen oynamak veya kullanmak istediğiniz uygulamayı seçin</div>
-
-    <div class="grid-container">
-        <div class="card" onclick="alert('3D İsim Zarı Başlatılıyor...')">
-            <div class="card-icon">🎲</div>
-            <h3>3D İsim Zarı</h3>
-            <p>Zarı sallayın ve listelenen şanslı isimlerden birini tamamen rastgele seçin!</p>
-        </div>
-
-        <div class="card" onclick="alert('Zombie Crisis Başlatılıyor...')">
-            <div class="card-icon">👾</div>
-            <h3>Zombie Crisis</h3>
-            <p>Zombi istilasına karşı uzay geminizle savaşın, yeni gemiler alın ve hayatta kalın!</p>
-        </div>
-
-        <div class="card" onclick="openApp('flappyKaanApp', startFlappyKaan)">
-            <div class="card-icon">😎</div>
-            <h3>Flappy Kaan</h3>
-            <p>Mobil ve masaüstü uyumlu, engelleri aşarak en yüksek skoru hedeflediğin macera!</p>
-        </div>
-
-        <div class="card" onclick="openApp('calculatorApp')">
-            <div class="card-icon">🧮</div>
-            <h3>Gelişmiş Hesap Makinesi</h3>
-            <p>Matematiksel işlemler ve Bilişim Bölümü dersleri için Binary - Decimal taban dönüşümleri.</p>
-        </div>
-
-        <div class="card" onclick="openApp('currencyApp', updateCurrency)">
-            <div class="card-icon">𒱳</div>
-            <h3>Döviz Çevirici</h3>
-            <p>Yurt dışı cihaz fiyatlarını karşılaştırmak için internetsiz de çalışan Euro/Dolar çevirici.</p>
-        </div>
-    </div>
-</div>
-
-
-<div id="flappyKaanApp" class="app-window">
-    <button class="back-btn" onclick="closeApp('flappyKaanApp', stopFlappyKaan)">⬅ Ana Menü</button>
-    <div class="game-wrapper">
-        <canvas id="gameCanvas"></canvas>
-    </div>
-</div>
-
-<div id="calculatorApp" class="app-window">
-    <button class="back-btn" onclick="closeApp('calculatorApp')">⬅ Ana Menü</button>
-    <div class="calc-container">
-        <h2 style="margin-top:0; text-align: center; color: #00f2fe;">Gelişmiş Hesap Makinesi</h2>
-        <input type="text" id="calcDisplay" readonly placeholder="0">
+<div id="page-menu" class="page-section active">
+    <div class="menu-container">
+        <h1>Uygulama Dünyası</h1>
+        <p>Lütfen oynamak veya kullanmak istediğiniz uygulamayı seçin</p>
         
-        <div class="calc-grid">
-            <button onclick="clearCalc()" class="btn-clear">C</button>
-            <button onclick="inputCalc('/')" class="btn-op">/</button>
-            <button onclick="inputCalc('*')" class="btn-op">*</button>
-            <button onclick="inputCalc('-')" class="btn-op">-</button>
-            
-            <button onclick="inputCalc('7')">7</button>
-            <button onclick="inputCalc('8')">8</button>
-            <button onclick="inputCalc('9')">9</button>
-            <button onclick="inputCalc('+')" class="btn-op">+</button>
-            
-            <button onclick="inputCalc('4')">4</button>
-            <button onclick="inputCalc('5')">5</button>
-            <button onclick="inputCalc('6')">6</button>
-            <button onclick="calculateResult()" class="btn-equal">=</button>
-            
-            <button onclick="inputCalc('1')">1</button>
-            <button onclick="inputCalc('2')">2</button>
-            <button onclick="inputCalc('3')">3</button>
-            <button onclick="inputCalc('0')">0</button>
-        </div>
-
-        <div class="binary-section">
-            <h4 style="margin: 0 0 10px 0;">💻 Sayı Sistemleri Dönüşümü</h4>
-            <input type="text" id="baseInput" placeholder="Sayıyı girin (Örn: 1010 veya 25)">
-            <div class="bin-buttons">
-                <button onclick="convertDecimalToBinary()">Decimal -> Binary</button>
-                <button onclick="convertBinaryToDecimal()">Binary -> Decimal</button>
+        <div class="apps-grid">
+            <div class="app-card" onclick="navigateTo('dice')">
+                <div class="app-icon">🎲</div>
+                <div class="app-title">3D İsim Zarı</div>
+                <div class="app-desc">Zar sallayın ve listelenen şanslı isimlerden birini tamamen rastgele seçin!</div>
             </div>
-            <div id="conversionResult" class="conversion-result">Sonuç: -</div>
+
+            <div class="app-card" onclick="navigateTo('zombie')">
+                <div class="app-icon">👾</div>
+                <div class="app-title">Zombie Crisis</div>
+                <div class="app-desc">Zombi istilasına karşı uzay geminizle savaşın, yeni gemiler alın ve hayatta kalın!</div>
+            </div>
+
+            <div class="app-card" onclick="navigateTo('flappy')">
+                <div class="app-icon">😎</div>
+                <div class="app-title">Flappy Kaan</div>
+                <div class="app-desc">Engellere çarpmadan Kaan'ı uçurun, rekorları kırın ve gece/gündüz modunu keşfedin!</div>
+            </div>
         </div>
     </div>
 </div>
 
-<div id="currencyApp" class="app-window">
-    <button class="back-btn" onclick="closeApp('currencyApp')">⬅ Ana Menü</button>
-    <div class="currency-container">
-        <h2 style="margin-top:0; text-align: center; color: #00f2fe;">𒱳 Döviz Çevirici</h2>
+<div id="page-dice" class="page-section">
+    <button class="btn-main-menu" onclick="navigateTo('menu')">◀ Ana Menü</button>
+
+    <header class="navbar">
+        <div class="logo-placeholder">🎲 İsim Zarı</div>
+    </header>
+
+    <section class="hero">
+        <h1>3D İsim Zarı</h1>
+        <p>Zarın üzerine tıkla ve rastgele bir isim seçilsin.</p>
+    </section>
+
+    <section class="section">
+        <div class="card">
+            <div class="scene">
+                <div class="cube" id="cube">
+                    <div class="face front"><div class="dot center"></div></div>
+                    <div class="face back">
+                        <div class="dot top-left"></div><div class="dot middle-left"></div><div class="dot bottom-left"></div>
+                        <div class="dot top-right"></div><div class="dot middle-right"></div><div class="dot bottom-right"></div>
+                    </div>
+                    <div class="face right"><div class="dot top-left"></div><div class="dot center"></div><div class="dot bottom-right"></div></div>
+                    <div class="face left"><div class="dot top-left"></div><div class="dot top-right"></div><div class="dot bottom-left"></div><div class="dot bottom-right"></div></div>
+                    <div class="face top"><div class="dot top-left"></div><div class="dot top-right"></div><div class="dot center"></div><div class="dot bottom-left"></div><div class="dot bottom-right"></div></div>
+                    <div class="face bottom"><div class="dot top-left"></div><div class="dot bottom-right"></div></div>
+                </div>
+            </div>
+            <div class="name" id="name">?</div>
+            <div class="info">Zara tıkla</div>
+        </div>
+    </section>
+    <footer class="footer">© 2026 3D İsim Zarı</footer>
+</div>
+
+<div id="page-zombie" class="page-section">
+    <button class="btn-main-menu" onclick="stopZombieGame(); navigateTo('menu');">◀ Ana Menü</button>
+
+    <div class="header">
+        <h1 style="margin: 0; font-size: 20px; color: #ef4444; letter-spacing: 2px; text-shadow: 0 0 10px rgba(239,68,68,0.5);">ZOMBIE CRISIS</h1>
+        <div class="shop-btn" onclick="toggleShop()">🏠</div>
         
-        <div class="input-group">
-            <label>Miktar:</label>
-            <input type="number" id="currencyAmount" value="1" oninput="updateCurrency()">
+        <div class="stats-grid">
+            <div class="stat-box box-live">
+                <span class="stat-label">CAN</span>
+                <span id="lives-display" class="stat-val">💚💚💚</span>
+            </div>
+            <div class="stat-box box-score">
+                <span class="stat-label">SKOR</span>
+                <span id="score" class="stat-val score-val">0</span>
+            </div>
+            <div class="stat-box box-coin">
+                <span class="stat-label">PARA</span>
+                <span class="stat-val coin-val"><span id="coins">0</span> 🪙</span>
+            </div>
+            <div class="stat-box box-wave">
+                <span class="stat-label">DALGA</span>
+                <span id="wave" class="stat-val wave-val">1</span>
+            </div>
         </div>
+        <div id="powerup-status">ÖZELLİK: YOK</div>
+    </div>
 
-        <div class="input-group">
-            <label>Kaynak Birim:</label>
-            <select id="fromCurrency" onchange="updateCurrency()">
-                <option value="EUR" selected>Euro (€)</option>
-                <option value="USD">Dolar ($)</option>
-                <option value="TRY">Türk Lirası (₺)</option>
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label>Hedef Birim:</label>
-            <select id="toCurrency" onchange="updateCurrency()">
-                <option value="TRY" selected>Türk Lirası (₺)</option>
-                <option value="EUR">Euro (€)</option>
-                <option value="USD">Dolar ($)</option>
-            </select>
-        </div>
-
-        <div class="currency-result-box">
-            <span id="currencyResultText">1 EUR = 37.50 TRY</span>
-        </div>
-
-        <div class="manual-rates">
-            <h4>⚙ Manuel Kur Ayarları (Çevrimdışı Mod)</h4>
-            <label>1 Sabit Dolar ($) kaç TL?:</label>
-            <input type="number" id="rateUSD" value="34.20" oninput="updateCurrency()">
-            <label>1 Sabit Euro (€) kaç TL?:</label>
-            <input type="number" id="rateEUR" value="37.50" oninput="updateCurrency()">
+    <div id="game-wrapper">
+        <div id="game-container">
+            <canvas id="zombieCanvas"></canvas>
+            <div id="game-over-screen" class="overlay-screen">
+                <h2 style="color: #ef4444; margin: 0; font-size: 26px;">DÜNYA İSTİLA EDİLDİ!</h2>
+                <p style="font-size: 16px; margin: 8px 0;">Final Skorun: <span id="final-score" style="color:#38bdf8; font-weight:bold;">0</span></p>
+                <button class="btn-restart" onclick="restartZombieGame()">YENİDEN SAVAŞ</button>
+            </div>
+            <div id="upgrade-screen" class="overlay-screen">
+                <h2 style="color: #10b981; margin: 0; font-size: 22px; font-weight:900;">DALGA TEMİZLENDİ!</h2>
+                <p style="font-size: 14px; margin: 6px 0; color: #cbd5e1;">Bir kalıcı geliştirme seçin:</p>
+                <div class="cards-container" id="cards-box"></div>
+            </div>
+            <div id="shop-screen" class="overlay-screen">
+                <h2 style="color: #38bdf8; margin: 0; font-size: 22px; font-weight:900;">UZAY GEMİSİ HANGARI</h2>
+                <p style="font-size: 14px; margin: 6px 0; color: #f59e0b; font-weight:bold;">Mevcut Paran: <span id="shop-coins">0</span> 🪙</p>
+                <div class="cards-container" id="shop-ships-box"></div>
+                <button class="btn-close" onclick="toggleShop()">SAVAŞA DÖN</button>
+            </div>
         </div>
     </div>
+
+    <div id="controls">
+        <div class="move-buttons">
+            <div class="btn" id="btnLeft">◀</div>
+            <div class="btn" id="btnRight">▶</div>
+        </div>
+        <div class="btn btn-fire" id="btnFire">ATEŞ</div>
+    </div>
+</div>
+
+<div id="page-flappy" class="page-section">
+    <button class="btn-main-menu" onclick="stopFlappyGame(); navigateTo('menu');">◀ Ana Menü</button>
+    <canvas id="flappyCanvas"></canvas>
 </div>
 
 
 <script>
-// --- PENCERE YÖNETİMİ ---
-function openApp(appId, callback) {
-    document.getElementById('mainDashboard').style.display = 'none';
-    document.getElementById(appId).style.display = 'block';
-    if(callback) callback();
+/* ================================================================= */
+/* 🔄 1. SİSTEM: GLOBAL NAVIGATION & ROUTER                         */
+/* ================================================================= */
+let activeGame = null;
+
+function navigateTo(targetPage) {
+    // Tüm ekranları gizle
+    document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // Eski oyun döngülerini ve event Listener çakışmalarını temizle
+    stopFlappyGame();
+    stopZombieGame();
+
+    if (targetPage === 'menu') {
+        document.getElementById('page-menu').classList.add('active');
+        activeGame = null;
+    } else if (targetPage === 'dice') {
+        document.getElementById('page-dice').classList.add('active');
+        document.getElementById("name").textContent = "?";
+        document.getElementById("cube").style.transform = "rotateX(0deg) rotateY(0deg)";
+        activeGame = 'dice';
+    } else if (targetPage === 'zombie') {
+        document.getElementById('page-zombie').classList.add('active');
+        activeGame = 'zombie';
+        initZombieGame(); 
+    } else if (targetPage === 'flappy') {
+        document.getElementById('page-flappy').classList.add('active');
+        activeGame = 'flappy';
+        initFlappyGame();
+    }
 }
 
-function closeApp(appId, callback) {
-    document.getElementById(appId).style.display = 'none';
-    document.getElementById('mainDashboard').style.display = 'block';
-    if(callback) callback();
+/* ================================================================= */
+/* 🎲 2. MOTOR: 3D İSİM ZARI LOGIC SİSTEMİ                           */
+/* ================================================================= */
+const cube = document.getElementById("cube");
+const nameText = document.getElementById("name");
+const names = ["Ahmet", "Mehmet", "Ayşe", "Fatma", "Ali", "Zeynep", "Kaan", "Can", "Ece", "Selin"];
+const rotations = {
+    1:"rotateX(0deg) rotateY(0deg)", 2:"rotateX(90deg) rotateY(0deg)",
+    3:"rotateY(-90deg)", 4:"rotateY(90deg)", 5:"rotateX(-90deg)", 6:"rotateY(180deg)"
+};
+cube.addEventListener("click",()=>{
+    const random = Math.floor(Math.random()*6)+1;
+    cube.style.transform = `rotateX(${720 + Math.random()*720}deg) rotateY(${720 + Math.random()*720}deg)`;
+    nameText.textContent = "Seçiliyor...";
+    setTimeout(()=>{
+        cube.style.transform = rotations[random];
+        const chosenName = names[Math.floor(Math.random() * names.length)];
+        nameText.textContent = chosenName;
+    },1500);
+});
+
+/* ================================================================= */
+/* 👾 3. MOTOR: ZOMBIE CRISIS OYUN MOTORU                           */
+/* ================================================================= */
+const zCanvas = document.getElementById("zombieCanvas");
+const zCtx = zCanvas.getContext("2d");
+const zWrapper = document.getElementById("game-wrapper");
+
+zCanvas.width = 600; zCanvas.height = 480;
+let zPlayer = { x: 280, y: 430, width: 38, height: 24, speed: 5.2 };
+let zBullets = []; let invaders = []; let invaderBullets = []; let zParticles = []; let droppedPowerUps = []; 
+let zScore = 0; let zCoins = 0; let zWave = 1; let zLives = 3; let zGameOver = false;
+let isChoosingUpgrade = false; let isShopOpen = false; let zInterval;
+let currentShipSkin = "DEFAULT"; let purchasedShips = ["DEFAULT"];
+const shipsData = [
+    { id: "DEFAULT", title: "Klasik Gemi", desc: "Başlangıç gemisi.", price: 0, type: "normal" },
+    { id: "NEON_FIGHTER", title: "Neon Fighter", desc: "Şık plazma kanatları.", price: 50, type: "epic" },
+    { id: "CRIMSON_VIPER", title: "Crimson Viper", desc: "Gelişmiş zırh panelleri.", price: 120, type: "epic" },
+    { id: "VOID_SHADOW", title: "Void Shadow", desc: "Karanlık enerji motoru.", price: 250, type: "legendary" }
+];
+let permanentDoubleShot = false; let bulletSpeedModifier = 7.5; let shakeIntensity = 0; let zGameTime = 0;
+let baseInvaderSpeed = 1.0; let currentInvaderSpeed = 1.0; let invaderDirection = 1; let invaderShootChance = 0.013; let invaderBulletSpeed = 4.0;
+let activePowerUp = null; let powerUpTimer = 0; 
+let moveLeftActive = false; let moveRightActive = false;
+const invaderWidth = 30; const invaderHeight = 24;
+
+// Dokunmatik Kontrolleri
+document.getElementById("btnLeft").addEventListener("touchstart", (e)=>{ e.preventDefault(); moveLeftActive = true; });
+document.getElementById("btnLeft").addEventListener("touchend", ()=>{ moveLeftActive = false; });
+document.getElementById("btnRight").addEventListener("touchstart", (e)=>{ e.preventDefault(); moveRightActive = true; });
+document.getElementById("btnRight").addEventListener("touchend", ()=>{ moveRightActive = false; });
+document.getElementById("btnFire").addEventListener("touchstart", (e)=>{ e.preventDefault(); fireZombieBullet(); });
+
+function initZombieGame() {
+    zScore = 0; zWave = 1; zLives = 3; zGameTime = 0; baseInvaderSpeed = 1.0; invaderShootChance = 0.013; invaderBulletSpeed = 4.0;
+    zPlayer.speed = 5.2; bulletSpeedModifier = 7.5; permanentDoubleShot = false; zGameOver = false; isChoosingUpgrade = false; isShopOpen = false;
+    zBullets = []; invaderBullets = []; zParticles = []; droppedPowerUps = []; activePowerUp = null; powerUpTimer = 0; shakeIntensity = 0;
+    zPlayer.x = zCanvas.width / 2 - zPlayer.width / 2;
+    updateZombieUI();
+    document.getElementById("game-over-screen").style.display = "none";
+    document.getElementById("upgrade-screen").style.display = "none";
+    document.getElementById("shop-screen").style.display = "none";
+    createInvaders();
+    if (zInterval) clearInterval(zInterval);
+    zInterval = setInterval(zombieLoop, 1000 / 60);
 }
 
-// --- HESAP MAKİNESİ VE TABAN DÖNÜŞÜM KODLARI ---
-let calcDisplay = document.getElementById('calcDisplay');
-function inputCalc(value) { calcDisplay.value += value; }
-function clearCalc() { calcDisplay.value = ''; }
-function calculateResult() {
-    try { calcDisplay.value = eval(calcDisplay.value); } 
-    catch (e) { calcDisplay.value = 'Hata'; }
-}
-function convertDecimalToBinary() {
-    let val = parseInt(document.getElementById('baseInput').value);
-    if (!isNaN(val)) {
-        document.getElementById('conversionResult').innerText = "Binary: " + val.toString(2);
-    } else { document.getElementById('conversionResult').innerText = "Geçersiz Decimal Sayı!"; }
-}
-function convertBinaryToDecimal() {
-    let val = document.getElementById('baseInput').value.trim();
-    if (/^[01]+$/.test(val)) {
-        document.getElementById('conversionResult').innerText = "Decimal: " + parseInt(val, 2);
-    } else { document.getElementById('conversionResult').innerText = "Geçersiz Binary Sayı!"; }
+function stopZombieGame() { if (zInterval) clearInterval(zInterval); zGameOver = true; }
+
+function updateZombieUI() {
+    document.getElementById("score").innerText = zScore; document.getElementById("coins").innerText = zCoins; document.getElementById("wave").innerText = zWave;
+    let hearts = ""; for(let i = 0; i < zLives; i++) hearts += "💚"; if(zLives === 0) hearts = "💔";
+    document.getElementById("lives-display").innerText = hearts;
+    const pStatus = document.getElementById("powerup-status");
+    if (activePowerUp) {
+        const secondsLeft = Math.ceil(powerUpTimer / 60);
+        if (activePowerUp === "TRIPLE_SHOT") pStatus.innerText = `🔥 ÜÇLÜ ATEŞ (${secondsLeft}s)`;
+        if (activePowerUp === "RAPID_FIRE") pStatus.innerText = `⚡ HIZLI ATEŞ (${secondsLeft}s)`;
+    } else { pStatus.innerText = "ÖZELLİK: YOK"; }
 }
 
-// --- DÖVİZ ÇEVİRİCİ KODLARI ---
-function updateCurrency() {
-    let amount = parseFloat(document.getElementById('currencyAmount').value) || 0;
-    let from = document.getElementById('fromCurrency').value;
-    let to = document.getElementById('toCurrency').value;
+function createInvaders() {
+    invaders = []; const rows = Math.min(3 + Math.floor(zWave / 3), 5); const cols = 8;
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const isLeader = Math.random() < 0.2;
+            invaders.push({ x: col * (invaderWidth + 22) + 50, y: row * (invaderHeight + 16) + 50, width: invaderWidth, height: invaderHeight, alive: true, isLeader: isLeader, hp: isLeader ? 2 : 1 });
+        }
+    }
+}
+
+function zombieLoop() { if (!isChoosingUpgrade && !isShopOpen) { updateZombie(); } drawZombie(); applyScreenShake(); }
+
+function toggleShop() {
+    if (zGameOver || isChoosingUpgrade) return;
+    isShopOpen = !isShopOpen;
+    if (isShopOpen) { document.getElementById("shop-coins").innerText = zCoins; renderShop(); document.getElementById("shop-screen").style.display = "flex"; } 
+    else { document.getElementById("shop-screen").style.display = "none"; }
+}
+
+function renderShop() {
+    const box = document.getElementById("shop-ships-box"); box.innerHTML = "";
+    shipsData.forEach(ship => {
+        const isPurchased = purchasedShips.includes(ship.id); const isEquipped = currentShipSkin === ship.id;
+        const cardDiv = document.createElement("div"); cardDiv.className = `card ${ship.type} ${isEquipped ? 'equipped' : ''}`;
+        let statusText = `<span class="card-price">${ship.price} 🪙</span>`;
+        if (isEquipped) statusText = `<span style="color:#10b981; font-weight:bold;">SEÇİLİ</span>`;
+        else if (isPurchased) statusText = `<span style="color:#38bdf8;">SAHİPSİN</span>`;
+        cardDiv.innerHTML = `<div class="card-title" style="color: ${ship.type === 'legendary' ? '#f59e0b' : ship.type === 'epic' ? '#a855f7' : '#3b82f6'}">${ship.title}</div><div class="card-desc">${ship.desc}</div><div>${statusText}</div>`;
+        cardDiv.onclick = () => handleShopClick(ship); box.appendChild(cardDiv);
+    });
+}
+
+function handleShopClick(ship) {
+    if (purchasedShips.includes(ship.id)) { currentShipSkin = ship.id; } 
+    else if (zCoins >= ship.price) { zCoins -= ship.price; purchasedShips.push(ship.id); currentShipSkin = ship.id; document.getElementById("shop-coins").innerText = zCoins; updateZombieUI(); }
+    renderShop();
+}
+
+function applyScreenShake() {
+    if (shakeIntensity > 0) {
+        const dx = (Math.random() - 0.5) * shakeIntensity; const dy = (Math.random() - 0.5) * shakeIntensity;
+        zWrapper.style.transform = `translate(${dx}px, ${dy}px)`; shakeIntensity *= 0.9;
+        if (shakeIntensity < 0.2) { shakeIntensity = 0; zWrapper.style.transform = "translate(0px, 0px)"; }
+    }
+}
+
+function createZombieParticles(x, y, color, count = 8) {
+    for (let i = 0; i < count; i++) {
+        zParticles.push({ x: x, y: y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4 - 1, radius: Math.random() * 2 + 1, color: color, alpha: 1, decay: Math.random() * 0.02 + 0.015 });
+    }
+}
+
+function fireZombieBullet() {
+    if (zGameOver || isChoosingUpgrade || isShopOpen || activeGame !== 'zombie') return;
+    const bY = zPlayer.y; const bX = zPlayer.x + zPlayer.width / 2;
+    if (activePowerUp === "TRIPLE_SHOT") {
+        zBullets.push({ x: bX, y: bY, angle: -1.5 }); zBullets.push({ x: bX, y: bY, angle: 0 }); zBullets.push({ x: bX, y: bY, angle: 1.5 });
+    } else if (permanentDoubleShot) {
+        zBullets.push({ x: zPlayer.x + 4, y: bY }); zBullets.push({ x: zPlayer.x + zPlayer.width - 8, y: bY });
+    } else { zBullets.push({ x: bX - 2, y: bY }); }
+}
+
+function restartZombieGame() { initZombieGame(); }
+
+function updateZombie() {
+    if (zGameOver) return; zGameTime++;
+    currentInvaderSpeed = baseInvaderSpeed + (zGameTime / 2000);
+    if (activePowerUp) { powerUpTimer--; if (powerUpTimer <= 0) activePowerUp = null; updateZombieUI(); }
     
-    let rateUSD = parseFloat(document.getElementById('rateUSD').value) || 34.20;
-    let rateEUR = parseFloat(document.getElementById('rateEUR').value) || 37.50;
+    if (moveLeftActive) zPlayer.x -= zPlayer.speed;
+    if (moveRightActive) zPlayer.x += zPlayer.speed;
+    if (zPlayer.x < 0) zPlayer.x = 0; if (zPlayer.x > zCanvas.width - zPlayer.width) zPlayer.x = zCanvas.width - zPlayer.width;
 
-    let fromRateInTRY = 1;
-    if (from === 'USD') fromRateInTRY = rateUSD;
-    if (from === 'EUR') fromRateInTRY = rateEUR;
+    let bSpeed = activePowerUp === "RAPID_FIRE" ? 12 : bulletSpeedModifier;
+    for (let i = zBullets.length - 1; i >= 0; i--) {
+        zBullets[i].y -= bSpeed; if (zBullets[i].angle) zBullets[i].x += zBullets[i].angle;
+        if (zBullets[i].y < 0 || zBullets[i].x < 0 || zBullets[i].x > zCanvas.width) { zBullets.splice(i, 1); }
+    }
 
-    let toRateInTRY = 1;
-    if (to === 'USD') toRateInTRY = rateUSD;
-    if (to === 'EUR') toRateInTRY = rateEUR;
+    for (let i = droppedPowerUps.length - 1; i >= 0; i--) {
+        let pot = droppedPowerUps[i]; pot.y += 1.8;
+        if (pot.y > zCanvas.height) { droppedPowerUps.splice(i, 1); continue; }
+        if (pot.x + 16 > zPlayer.x && pot.x < zPlayer.x + zPlayer.width && pot.y + 16 > zPlayer.y && pot.y < zPlayer.y + zPlayer.height) {
+            if (pot.type === "HEAL") { if (zLives < 3) zLives++; else zScore += 50; createZombieParticles(pot.x + 8, pot.y + 8, "#22c55e", 12); } 
+            else { activePowerUp = pot.type; powerUpTimer = 350; createZombieParticles(pot.x + 8, pot.y + 8, "#f59e0b", 10); }
+            shakeIntensity = 4; updateZombieUI(); droppedPowerUps.splice(i, 1);
+        }
+    }
 
-    let result = (amount * fromRateInTRY) / toRateInTRY;
-    document.getElementById('currencyResultText').innerText = amount + " " + from + " = " + result.toFixed(2) + " " + to;
+    for (let i = invaderBullets.length - 1; i >= 0; i--) {
+        invaderBullets[i].y += invaderBulletSpeed;
+        if (invaderBullets[i].y > zCanvas.height) { invaderBullets.splice(i, 1); continue; }
+        if (invaderBullets[i].x > zPlayer.x && invaderBullets[i].x < zPlayer.x + zPlayer.width && invaderBullets[i].y > zPlayer.y && invaderBullets[i].y < zPlayer.y + zPlayer.height) {
+            createZombieParticles(zPlayer.x + zPlayer.width/2, zPlayer.y, "#ef4444", 12); shakeIntensity = 12; invaderBullets.splice(i, 1); zLives--; updateZombieUI();
+            if (zLives <= 0) { zGameOver = true; document.getElementById("final-score").innerText = zScore; document.getElementById("game-over-screen").style.display = "flex"; }
+        }
+    }
+
+    let changeDir = false;
+    invaders.forEach(inv => {
+        if (!inv.alive) return; inv.x += currentInvaderSpeed * invaderDirection;
+        if (inv.x + inv.width > zCanvas.width - 15 || inv.x < 15) changeDir = true;
+        if (inv.y + inv.height > zPlayer.y) { zGameOver = true; document.getElementById("final-score").innerText = zScore; document.getElementById("game-over-screen").style.display = "flex"; }
+        if (Math.random() < invaderShootChance) invaderBullets.push({ x: inv.x + inv.width/2, y: inv.y + inv.height });
+    });
+
+    if (changeDir) { invaderDirection *= -1; invaders.forEach(inv => { if(inv.alive) inv.y += 15; }); }
+
+    for (let b = zBullets.length - 1; b >= 0; b--) {
+        for (let inv = 0; inv < invaders.length; inv++) {
+            let iv = invaders[inv];
+            if (iv.alive && zBullets[b] && zBullets[b].x > iv.x && zBullets[b].x < iv.x + iv.width && zBullets[b].y > iv.y && zBullets[b].y < iv.y + iv.height) {
+                zBullets.splice(b, 1); iv.hp--; createZombieParticles(iv.x + iv.width/2, iv.y + iv.height/2, iv.isLeader ? "#a855f7" : "#ef4444", 6);
+                if (iv.hp <= 0) {
+                    iv.alive = false; zScore += iv.isLeader ? 30 : 10; zCoins += iv.isLeader ? 3 : 1; updateZombieUI();
+                    if (Math.random() < 0.16) {
+                        let types = ["TRIPLE_SHOT", "RAPID_FIRE", "HEAL"];
+                        droppedPowerUps.push({ x: iv.x + iv.width/2, y: iv.y, type: types[Math.floor(Math.random()*types.length)] });
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    for (let p = zParticles.length - 1; p >= 0; p--) {
+        let pt = zParticles[p]; pt.x += pt.vx; pt.y += pt.vy; pt.alpha -= pt.decay;
+        if (pt.alpha <= 0) zParticles.splice(p, 1);
+    }
+
+    if (invaders.length > 0 && invaders.every(inv => !inv.alive) && !isChoosingUpgrade) { triggerWaveClear(); }
 }
 
-// --- FLAPPY KAAN OYUN MOTORU KODLARI ---
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+function triggerWaveClear() {
+    isChoosingUpgrade = true; const box = document.getElementById("cards-box"); box.innerHTML = "";
+    let options = [
+        { title: "Çift Namlu", desc: "Kalıcı çift mermi atışı.", action: () => { permanentDoubleShot = true; } },
+        { title: "Motor Gücü", desc: "Gemi hızını artırır.", action: () => { zPlayer.speed += 1.2; } },
+        { title: "Hiper Sürücü", desc: "Mermiler daha hızlı gider.", action: () => { bulletSpeedModifier += 2; } }
+    ];
+    options.sort(() => Math.random() - 0.5);
+    options.slice(0, 2).forEach(opt => {
+        const d = document.createElement("div"); d.className = "card";
+        d.innerHTML = `<div class="card-title" style="color:#10b981;">${opt.title}</div><div class="card-desc">${opt.desc}</div>`;
+        d.onclick = () => { opt.action(); isChoosingUpgrade = false; zWave++; baseInvaderSpeed += 0.25; invaderShootChance += 0.002; document.getElementById("upgrade-screen").style.display = "none"; createInvaders(); updateZombieUI(); };
+        box.appendChild(d);
+    });
+    document.getElementById("upgrade-screen").style.display = "flex";
+}
 
-canvas.width = 800;
-canvas.height = 600;
+function drawZombie() {
+    zCtx.clearRect(0, 0, zCanvas.width, zCanvas.height);
+    zCtx.fillStyle = "rgba(255,255,255,0.15)";
+    for(let i=0; i<15; i++) zCtx.fillRect((i*47 + zGameTime/2)%zCanvas.width, (i*83)%zCanvas.height, 2, 2);
+
+    if(currentShipSkin === "VOID_SHADOW") zCtx.fillStyle = "#a855f7";
+    else if(currentShipSkin === "CRIMSON_VIPER") zCtx.fillStyle = "#ef4444";
+    else if(currentShipSkin === "NEON_FIGHTER") zCtx.fillStyle = "#38bdf8";
+    else zCtx.fillStyle = "#3b82f6";
+    
+    zCtx.fillRect(zPlayer.x, zPlayer.y, zPlayer.width, zPlayer.height);
+    zCtx.fillStyle = "#ffffff"; zCtx.fillRect(zPlayer.x + zPlayer.width/2 - 2, zPlayer.y - 4, 4, 4);
+
+    zCtx.fillStyle = activePowerUp === "RAPID_FIRE" ? "#f59e0b" : "#60a5fa";
+    zBullets.forEach(b => zCtx.fillRect(b.x, b.y, 4, 10));
+
+    invaders.forEach(inv => {
+        if (!inv.alive) return;
+        zCtx.fillStyle = inv.isLeader ? "#a855f7" : "#22c55e";
+        zCtx.fillRect(inv.x, inv.y, inv.width, inv.height);
+        zCtx.fillStyle = "#000"; zCtx.fillRect(inv.x + 5, inv.y + 4, 4, 4); zCtx.fillRect(inv.x + inv.width - 9, inv.y + 4, 4, 4);
+    });
+
+    zCtx.fillStyle = "#ef4444"; invaderBullets.forEach(ib => zCtx.fillRect(ib.x, ib.y, 4, 8));
+
+    droppedPowerUps.forEach(pot => {
+        zCtx.fillStyle = pot.type === "HEAL" ? "#22c55e" : "#f59e0b";
+        zCtx.fillRect(pot.x, pot.y, 16, 16);
+    });
+
+    zCtx.forEach ? null : zParticles.forEach(pt => {
+        zCtx.fillStyle = pt.color; zCtx.globalAlpha = pt.alpha;
+        zCtx.beginPath(); zCtx.arc(pt.x, pt.y, pt.radius, 0, Math.PI*2); zCtx.fill();
+    });
+    zCtx.globalAlpha = 1.0;
+}
+
+/* ================================================================= */
+/* 😎 4. MOTOR: FLAPPY KAAN ENTEGRE CANVAS MOTORU                    */
+/* ================================================================= */
+const fCanvas = document.getElementById("flappyCanvas");
+const fCtx = fCanvas.getContext("2d");
+
+fCanvas.width = 800;
+fCanvas.height = 600;
 
 const playerImg = new Image();
-playerImg.src = "ben.png.jpg"; // Profil resminin adı
+playerImg.src = "ben.png.jpg";
 let imgLoaded = false;
 playerImg.onload = () => { imgLoaded = true; };
 
-let bird, pipes, clouds, stars, score, highScore, gameOver, isNight, flappyAnimationId, pipeInterval;
+let bird = { x: 150, y: 250, width: 75, height: 75, velocity: 0, gravity: 0.4, jumpStrength: -7.5, angle: 0 };
+let pipes = []; let clouds = []; let stars = []; let score = 0;
+let highScore = localStorage.getItem("flappyKaanHighScore") || 0;
+let fGameOver = false; let isNight = false; let flappyReqFrame;
 
-function initFlappyVariables() {
-    bird = { x: 150, y: 250, width: 75, height: 75, velocity: 0, gravity: 0.4, jumpStrength: -7.5, angle: 0 };
-    pipes = []; clouds = []; stars = []; score = 0;
-    highScore = localStorage.getItem("flappyKaanHighScore") || 0;
-    gameOver = false;
-    isNight = Math.random() > 0.5;
-
+function initFlappyGame() {
+    bird.y = 250; bird.velocity = 0; bird.angle = 0;
+    pipes = []; score = 0; fGameOver = false;
+    isNight = Math.random() > 0.5; clouds = []; stars = [];
+    
     for(let i = 0; i < 5; i++) {
-        clouds.push({ x: Math.random() * canvas.width * 1.5, y: Math.random() * 150 + 30, speed: Math.random() * 0.5 + 0.2, size: Math.random() * 30 + 20 });
+        clouds.push({
+            x: Math.random() * fCanvas.width * 1.5,
+            y: Math.random() * 150 + 30,
+            speed: Math.random() * 0.5 + 0.2,
+            size: Math.random() * 30 + 20
+        });
     }
     if(isNight) {
-        for(let i = 0; i < 30; i++) stars.push({ x: Math.random() * canvas.width, y: Math.random() * 300, size: Math.random() * 2 + 1 });
+        for(let i = 0; i < 30; i++) {
+            stars.push({ x: Math.random() * fCanvas.width, y: Math.random() * 300, size: Math.random() * 2 + 1 });
+        }
     }
+    if (flappyReqFrame) cancelAnimationFrame(flappyReqFrame);
+    flappyReqFrame = requestAnimationFrame(flappyLoop);
 }
 
-function jumpFlappy(e) {
-    if (e) e.preventDefault();
-    if (!gameOver) bird.velocity = bird.jumpStrength;
-}
+function stopFlappyGame() { if (flappyReqFrame) cancelAnimationFrame(flappyReqFrame); fGameOver = true; }
 
-function handleFlappyTouch(e) {
-    e.preventDefault();
-    if (gameOver) restartFlappy(); else jumpFlappy();
-}
-
-function handleFlappyKey(e) {
-    if (e.code === "Space" || e.code === "ArrowUp") { e.preventDefault(); jumpFlappy(); }
-    if (e.key === "r" || e.key === "R") restartFlappy();
-}
+function flappyJump() { if (!fGameOver) bird.velocity = bird.jumpStrength; }
 
 function createPipe() {
-    const gap = 210; const minHeight = 50;
-    const maxHeight = canvas.height - gap - minHeight - 100;
+    const gap = 210;
+    const minHeight = 50;
+    const maxHeight = fCanvas.height - gap - minHeight - 100;
     const topHeight = Math.random() * maxHeight + minHeight;
-    pipes.push({ x: canvas.width, width: 85, topHeight: topHeight, bottomY: topHeight + gap, scored: false });
+    pipes.push({ x: fCanvas.width, width: 85, topHeight: topHeight, bottomY: topHeight + gap, scored: false });
+}
+
+// Flappy Boru Zamanlayıcısı Kontrolü
+let fPipeTimer = 0;
+
+function flappyLoop() {
+    if (activeGame !== 'flappy') return;
+
+    // Güncelleme (Update) kısmı
+    if (!fGameOver) {
+        fPipeTimer++;
+        if (fPipeTimer % 150 === 0) createPipe();
+
+        clouds.forEach(c => {
+            c.x -= c.speed;
+            if(c.x + c.size * 2 < 0) c.x = fCanvas.width + 50;
+        });
+
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+
+        if (bird.y < 0 || bird.y + bird.height > fCanvas.height) fGameOver = true;
+
+        pipes.forEach(pipe => {
+            pipe.x -= 3.2;
+            const topPipe = { x: pipe.x, y: 0, width: pipe.width, height: pipe.topHeight };
+            const bottomPipe = { x: pipe.x, y: pipe.bottomY, width: pipe.width, height: fCanvas.height - pipe.bottomY };
+
+            if (collision(bird, topPipe) || collision(bird, bottomPipe)) fGameOver = true;
+
+            if (!pipe.scored && pipe.x + pipe.width < bird.x) {
+                score++; pipe.scored = true;
+                if(score > highScore) { highScore = score; localStorage.setItem("flappyKaanHighScore", highScore); }
+            }
+        });
+        pipes = pipes.filter(pipe => pipe.x + pipe.width > -100);
+    }
+
+    // Çizim (Draw) kısmı
+    if(isNight) {
+        let nightGrad = fCtx.createLinearGradient(0, 0, 0, fCanvas.height);
+        nightGrad.addColorStop(0, "#0c1020"); nightGrad.addColorStop(1, "#1d2646"); fCtx.fillStyle = nightGrad;
+    } else {
+        let dayGrad = fCtx.createLinearGradient(0, 0, 0, fCanvas.height);
+        dayGrad.addColorStop(0, "#4facfe"); dayGrad.addColorStop(1, "#00f2fe"); fCtx.fillStyle = dayGrad;
+    }
+    fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+
+    if(isNight) {
+        fCtx.fillStyle = "#ffffff";
+        stars.forEach(s => { fCtx.beginPath(); fCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2); fCtx.fill(); });
+    }
+
+    fCtx.fillStyle = isNight ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.65)";
+    clouds.forEach(c => {
+        fCtx.beginPath(); fCtx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+        fCtx.arc(c.x + c.size * 0.6, c.y - c.size * 0.2, c.size * 1.2, 0, Math.PI * 2);
+        fCtx.arc(c.x + c.size * 1.3, c.y, c.size * 0.8, 0, Math.PI * 2); fCtx.fill();
+    });
+
+    pipes.forEach(pipe => {
+        drawFlappyPipe(pipe.x, 0, pipe.width, pipe.topHeight, true);
+        drawFlappyPipe(pipe.x, pipe.bottomY, pipe.width, fCanvas.height - pipe.bottomY, false);
+    });
+
+    drawFlappyBird();
+
+    fCtx.fillStyle = "white"; fCtx.strokeStyle = "black"; fCtx.lineWidth = 6; fCtx.font = "bold 50px Arial"; fCtx.textAlign = "center";
+    fCtx.strokeText(score, fCanvas.width / 2, 70); fCtx.fillText(score, fCanvas.width / 2, 70);
+
+    if (fGameOver) {
+        fCtx.fillStyle = "rgba(0, 0, 0, 0.65)"; fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+        fCtx.fillStyle = "#2e3440"; fCtx.strokeStyle = "#4c566a"; fCtx.lineWidth = 5;
+        fCtx.roundRect ? fCtx.roundRect(fCanvas.width / 2 - 175, 130, 350, 260, 15) : fCtx.fillRect(fCanvas.width / 2 - 175, 130, 350, 260);
+        fCtx.fill(); fCtx.stroke();
+        fCtx.fillStyle = "#ff5e57"; fCtx.font = "bold 40px Arial"; fCtx.fillText("OYUN BİTTİ", fCanvas.width / 2, 185);
+        fCtx.fillStyle = "#e5e9f0"; fCtx.font = "24px Arial"; fCtx.fillText("Skorun: " + score, fCanvas.width / 2, 240);
+        fCtx.fillStyle = "#ebcb8b"; fCtx.fillText("En Yüksek Skor: " + highScore, fCanvas.width / 2, 280);
+        fCtx.fillStyle = "#a3be8c"; fCtx.font = "italic 18px Arial"; fCtx.fillText("Yeniden başlamak için Ekrana Dokun veya 'R'ye bas", fCanvas.width / 2, 345);
+    }
+
+    flappyReqFrame = requestAnimationFrame(flappyLoop);
 }
 
 function drawFlappyBird() {
-    ctx.save();
-    let centerX = bird.x + bird.width / 2;
-    let centerY = bird.y + bird.height / 2;
-    ctx.translate(centerX, centerY);
+    fCtx.save();
+    let centerX = bird.x + bird.width / 2; let centerY = bird.y + bird.height / 2;
+    fCtx.translate(centerX, centerY);
     bird.angle = Math.min(Math.PI / 4, Math.max(-Math.PI / 7, bird.velocity * 0.06));
-    ctx.rotate(bird.angle);
-    ctx.beginPath(); ctx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); ctx.clip();
+    fCtx.rotate(bird.angle);
+    fCtx.beginPath(); fCtx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); fCtx.clip();
 
     if (imgLoaded) {
-        ctx.drawImage(playerImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+        fCtx.drawImage(playerImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
     } else {
-        ctx.fillStyle = "#ffca28"; ctx.beginPath(); ctx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#000"; ctx.font = "38px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("😎", 0, 2);
+        fCtx.fillStyle = "#ffca28"; fCtx.beginPath(); fCtx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); fCtx.fill();
+        fCtx.fillStyle = "#000"; fCtx.font = "38px Arial"; fCtx.textAlign = "center"; fCtx.textBaseline = "middle"; fCtx.fillText("😎", 0, 2);
     }
-    ctx.restore();
+    fCtx.restore();
 }
 
 function drawFlappyPipe(x, y, width, height, isTop) {
-    let grad = ctx.createLinearGradient(x, 0, x + width, 0);
+    let grad = fCtx.createLinearGradient(x, 0, x + width, 0);
     grad.addColorStop(0, "#73da2c"); grad.addColorStop(0.3, "#9eff6b"); grad.addColorStop(0.7, "#58b31d"); grad.addColorStop(1, "#3c8210");
-    ctx.fillStyle = grad; ctx.fillRect(x, y, width, height);
-    ctx.strokeStyle = "#1e4707"; ctx.lineWidth = 4; ctx.strokeRect(x, y, width, height);
+    fCtx.fillStyle = grad; fCtx.fillRect(x, y, width, height);
+    fCtx.strokeStyle = "#1e4707"; fCtx.lineWidth = 4; fCtx.strokeRect(x, y, width, height);
     let capHeight = 30; let capX = x - 6; let capWidth = width + 12; let capY = isTop ? (y + height - capHeight) : y;
-    ctx.fillRect(capX, capY, capWidth, capHeight); ctx.strokeRect(capX, capY, capWidth, capHeight);
+    fCtx.fillRect(capX, capY, capWidth, capHeight); fCtx.strokeRect(capX, capY, capWidth, capHeight);
 }
 
-function checkFlappyCollision(a, b) {
+function collision(a, b) {
     const padding = 12;
     return (a.x + padding < b.x + b.width && a.x + a.width - padding > b.x && a.y + padding < b.y + b.height && a.y + a.height - padding > b.y);
 }
 
-function updateFlappy() {
-    if (gameOver) return;
-    clouds.forEach(c => { c.x -= c.speed; if(c.x + c.size * 2 < 0) c.x = canvas.width + 50; });
-    bird.velocity += bird.gravity; bird.y += bird.velocity;
-    if (bird.y < 0 || bird.y + bird.height > canvas.height) gameOver = true;
-
-    pipes.forEach(pipe => {
-        pipe.x -= 3.2;
-        const topP = { x: pipe.x, y: 0, width: pipe.width, height: pipe.topHeight };
-        const botP = { x: pipe.x, y: pipe.bottomY, width: pipe.width, height: canvas.height - pipe.bottomY };
-        if (checkFlappyCollision(bird, topP) || checkFlappyCollision(bird, botP)) gameOver = true;
-        if (!pipe.scored && pipe.x + pipe.width < bird.x) {
-            score++; pipe.scored = true;
-            if(score > highScore) { highScore = score; localStorage.setItem("flappyKaanHighScore", highScore); }
-        }
-    });
-    pipes = pipes.filter(pipe => pipe.x + pipe.width > -100);
-}
-
-function drawFlappy() {
-    if(isNight) {
-        let nightGrad = ctx.createLinearGradient(0, 0, 0, canvas.height); nightGrad.addColorStop(0, "#0c1020"); nightGrad.addColorStop(1, "#1d2646"); ctx.fillStyle = nightGrad;
-    } else {
-        let dayGrad = ctx.createLinearGradient(0, 0, 0, canvas.height); dayGrad.addColorStop(0, "#4facfe"); dayGrad.addColorStop(1, "#00f2fe"); ctx.fillStyle = dayGrad;
+/* ================================================================= */
+/* 💻 GLOBAL KLAVYE VE AMBİYANS EVENTLERİ                            */
+/* ================================================================= */
+window.addEventListener("keydown", (e) => {
+    // Zombie Oyunu Klavye Kontrolleri
+    if (activeGame === 'zombie') {
+        if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLeftActive = true;
+        if(e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveRightActive = true;
+        if(e.key === " " || e.key === "Enter") fireZombieBullet();
     }
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if(isNight) {
-        ctx.fillStyle = "#ffffff"; stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); });
+    // Flappy Oyun Klavye Kontrolleri
+    if (activeGame === 'flappy') {
+        if (e.code === "Space" || e.code === "ArrowUp") { e.preventDefault(); flappyJump(); }
+        if (e.key === "r" || e.key === "R") { initFlappyGame(); }
     }
-    ctx.fillStyle = isNight ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.65)";
-    clouds.forEach(c => {
-        ctx.beginPath(); ctx.arc(c.x, c.y, c.size, 0, Math.PI * 2); ctx.arc(c.x + c.size * 0.6, c.y - c.size * 0.2, c.size * 1.2, 0, Math.PI * 2); ctx.arc(c.x + c.size * 1.3, c.y, c.size * 0.8, 0, Math.PI * 2); ctx.fill();
-    });
+});
 
-    pipes.forEach(pipe => { drawFlappyPipe(pipe.x, 0, pipe.width, pipe.topHeight, true); drawFlappyPipe(pipe.x, pipe.bottomY, pipe.width, canvas.height - pipe.bottomY, false); });
-    drawFlappyBird();
-
-    ctx.fillStyle = "white"; ctx.strokeStyle = "black"; ctx.lineWidth = 6; ctx.font = "bold 50px Arial"; ctx.textAlign = "center";
-    ctx.strokeText(score, canvas.width / 2, 70); ctx.fillText(score, canvas.width / 2, 70);
-
-    if (gameOver) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.65)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#2e3440"; ctx.strokeStyle = "#4c566a"; ctx.lineWidth = 5;
-        ctx.roundRect ? ctx.roundRect(canvas.width / 2 - 175, 130, 350, 260, 15) : ctx.fillRect(canvas.width / 2 - 175, 130, 350, 260);
-        ctx.fill(); ctx.stroke();
-        ctx.fillStyle = "#ff5e57"; ctx.font = "bold 40px Arial"; ctx.fillText("OYUN BİTTİ", canvas.width / 2, 185);
-        ctx.fillStyle = "#e5e9f0"; ctx.font = "24px Arial"; ctx.fillText("Skorun: " + score, canvas.width / 2, 240);
-        ctx.fillStyle = "#ebcb8b"; ctx.fillText("En Yüksek Skor: " + highScore, canvas.width / 2, 280);
-        ctx.fillStyle = "#a3be8c"; ctx.font = "italic 18px Arial"; ctx.fillText("Yeniden Başlamak İçin Dokun veya 'R'ye bas", canvas.width / 2, 345);
+window.addEventListener("keyup", (e) => {
+    if (activeGame === 'zombie') {
+        if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLeftActive = false;
+        if(e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveRightActive = false;
     }
-}
+});
 
-function flappyLoop() {
-    updateFlappy();
-    drawFlappy();
-    flappyAnimationId = requestAnimationFrame(flappyLoop);
-}
+// Canvas Tıklama (Mouse) Bağlantıları
+fCanvas.addEventListener("click", () => { if (activeGame === 'flappy') flappyJump(); });
+zCanvas.addEventListener("click", () => { if (activeGame === 'zombie') fireZombieBullet(); });
 
-function startFlappyKaan() {
-    initFlappyVariables();
-    document.addEventListener("keydown", handleFlappyKey);
-    canvas.addEventListener("click", jumpFlappy);
-    canvas.addEventListener("touchstart", handleFlappyTouch, { passive: false });
-    pipeInterval = setInterval(() => { if (!gameOver) createPipe(); }, 2500);
-    flappyLoop();
-}
-
-function stopFlappyKaan() {
-    document.removeEventListener("keydown", handleFlappyKey);
-    canvas.removeEventListener("click", jumpFlappy);
-    canvas.removeEventListener("touchstart", handleFlappyTouch);
-    clearInterval(pipeInterval);
-    cancelAnimationFrame(flappyAnimationId);
-}
-
-function restartFlappy() {
-    stopFlappyKaan();
-    startFlappyKaan();
-}
+// Mobil Dokunmatik (Touch) Tetikleyicileri
+fCanvas.addEventListener("touchstart", (e) => {
+    if (activeGame !== 'flappy') return;
+    e.preventDefault();
+    if (fGameOver) initFlappyGame(); else flappyJump();
+}, { passive: false });
 </script>
 
 </body>
