@@ -1,294 +1,312 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Uygulama Dünyası - 3 Oyun Bir Arada</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Uygulama Dünyası - 3 Oyun Bir Arada</title>
 
-    <style>
-        /* --- GENEL SIFIRLAMA VE ORTAK STİLLER --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        body {
-            background: #0f172a;
-            color: #e2e8f0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden; /* Sayfanın aşağı kaymasını tamamen engeller */
-        }
+<style>
+/* --- GENEL SIFIRLAMA VE ORTAK STİLLER --- */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
 
-        /* Sayfa Bölümü Yönetimi: Sadece aktif olan ekran görünür */
-        .page-section {
-            display: none;
-            width: 100%;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+body {
+    background: #0f172a;
+    color: #e2e8f0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Sayfanın aşağı kaymasını tamamen engeller */
+}
 
-        .page-section.active {
-            display: flex; 
-            flex-direction: column;
-        }
+/* Sayfa Bölümü Yönetimi: Sadece aktif olan ekran görünür */
+.page-section {
+    display: none; 
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
-        /* Sol Üst Köşedeki Geri Dön / Ana Menü Buton Stili */
-        .btn-main-menu {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid #475569;
-            color: #e2e8f0;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            z-index: 9999;
-            backdrop-filter: blur(4px);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .btn-main-menu:hover {
-            background: #1e293b;
-            border-color: #3b82f6;
-            color: #3b82f6;
-        }
-        .btn-main-menu:active { transform: scale(0.95); }
+.page-section.active {
+    display: flex; 
+    flex-direction: column;
+}
 
-        /* ========================================== */
-        /* 📱 BÖLÜM 1: ANA MENÜ (UYGULAMA DÜNYASI)     */
-        /* ========================================== */
-        #page-menu {
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
+/* Sol Üst Köşedeki Geri Dön / Ana Menü Buton Stili */
+.btn-main-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #475569;
+    color: #e2e8f0;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.btn-main-menu:hover {
+    background: #1e293b;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+.btn-main-menu:active { transform: scale(0.95); }
 
-        #page-menu .menu-container {
-            text-align: center;
-            max-width: 1100px;
-            width: 100%;
-        }
 
-        #page-menu h1 {
-            font-size: 38px;
-            font-weight: 800;
-            background: linear-gradient(to right, #38bdf8, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
+/* ========================================== */
+/* 📱 BÖLÜM 1: ANA MENÜ (UYGULAMA DÜNYASI)     */
+/* ========================================== */
+#page-menu {
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto; /* Çok küçük ekranlarda menü taşarsa dikey kaydırma sağlar */
+}
 
-        #page-menu p {
-            color: #64748b;
-            font-size: 15px;
-            margin-bottom: 35px;
-            font-weight: 500;
-        }
+#page-menu .menu-container {
+    text-align: center;
+    max-width: 1100px;
+    width: 100%;
+}
 
-        #page-menu .apps-grid {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
+#page-menu h1 {
+    font-size: 38px;
+    font-weight: 800;
+    background: linear-gradient(to right, #38bdf8, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
 
-        #page-menu .app-card {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            border-radius: 24px;
-            padding: 35px 25px;
-            width: 280px;
-            cursor: pointer;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            backdrop-filter: blur(8px);
-        }
+#page-menu p {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 35px;
+    font-weight: 500;
+}
 
-        #page-menu .app-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 15px 35px rgba(56, 189, 248, 0.15);
-        }
+#page-menu .apps-grid {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    width: 100%;
+}
 
-        #page-menu .app-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
+#page-menu .app-card {
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 24px;
+    padding: 35px 25px;
+    width: 280px;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+}
 
-        #page-menu .app-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 10px;
-        }
+#page-menu .app-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 15px 35px rgba(56, 189, 248, 0.15);
+}
 
-        #page-menu .app-desc {
-            font-size: 13px;
-            color: #94a3b8;
-            line-height: 1.5;
-        }
+#page-menu .app-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
 
-        /* ========================================== */
-        /* 🎲 BÖLÜM 2: 3D İSİM ZARI STİLLERİ          */
-        /* ========================================== */
-        #page-dice {
-            background: linear-gradient(135deg, #f8fafc, #dbeafe);
-            color: #0f172a;
-            justify-content: flex-start;
-        }
+#page-menu .app-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 10px;
+}
 
-        #page-dice .navbar {
-            height: 75px;
-            width: 100%;
-            background: white;
-            display: flex;
-            align-items: center;
-            padding: 0 8%;
-            box-shadow: 0 2px 20px rgba(0,0,0,.05);
-        }
+#page-menu .app-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
 
-        #page-dice .logo-placeholder {
-            font-size: 22px;
-            font-weight: 800;
-            color: #2563eb;
-            margin-left: auto;
-        }
 
-        #page-dice .hero {
-            text-align: center;
-            padding: 40px 20px 10px;
-        }
+/* ========================================== */
+/* 🎲 BÖLÜM 2: 3D İSİM ZARI STİLLERİ          */
+/* ========================================== */
+#page-dice {
+    background: linear-gradient(135deg, #f8fafc, #dbeafe);
+    color: #0f172a;
+    justify-content: flex-start;
+}
 
-        #page-dice .hero h1 { font-size: 42px; margin-bottom: 8px; color: #0f172a; font-weight: 800; }
-        #page-dice .hero p { color: #64748b; font-size: 15px; }
+#page-dice .navbar {
+    height: 75px;
+    width: 100%;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+    box-shadow: 0 2px 20px rgba(0,0,0,.05);
+}
 
-        #page-dice .section { display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 10px; }
-        #page-dice .card { background: white; padding: 35px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,.08); text-align: center; }
+#page-dice .logo-placeholder {
+    font-size: 22px;
+    font-weight: 800;
+    color: #2563eb;
+    margin-left: auto;
+}
 
-        #page-dice .scene { width: 180px; height: 180px; perspective: 1000px; margin: auto; }
-        #page-dice .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.5s ease; cursor: pointer; }
-        #page-dice .face { position: absolute; width: 180px; height: 180px; background: white; border: 3px solid #e2e2e2; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,.1); }
+#page-dice .hero {
+    text-align: center;
+    padding: 40px 20px 10px;
+}
 
-        #page-dice .dot { width: 18px; height: 18px; background: #0f172a; border-radius: 50%; position: absolute; }
-        #page-dice .center { top:50%; left:50%; transform:translate(-50%,-50%); }
-        #page-dice .top-left { top:18px; left:18px; }
-        #page-dice .top-right { top:18px; right:18px; }
-        #page-dice .middle-left { top:50%; left:18px; transform:translateY(-50%); }
-        #page-dice .middle-right { top:50%; right:18px; transform:translateY(-50%); }
-        #page-dice .bottom-left { bottom:18px; left:18px; }
-        #page-dice .bottom-right { bottom:18px; right:18px; }
+#page-dice .hero h1 { font-size: 42px; margin-bottom: 8px; color: #0f172a; font-weight: 800; }
+#page-dice .hero p { color: #64748b; font-size: 15px; }
 
-        #page-dice .front { transform:translateZ(90px); }
-        #page-dice .back { transform:rotateY(180deg) translateZ(90px); }
-        #page-dice .right { transform:rotateY(90deg) translateZ(90px); }
-        #page-dice .left { transform:rotateY(-90deg) translateZ(90px); }
-        #page-dice .top { transform:rotateX(90deg) translateZ(90px); }
-        #page-dice .bottom { transform:rotateX(-90deg) translateZ(90px); }
+#page-dice .section { display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 10px; }
+#page-dice .card { background: white; padding: 35px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,.08); text-align: center; }
 
-        #page-dice .name { font-size: 32px; font-weight: 800; color: #2563eb; margin-top: 25px; height: 40px; }
-        #page-dice .info { color: #64748b; font-size: 14px; margin-top: 5px; }
-        #page-dice .footer { text-align: center; padding: 20px; color: #94a3b8; font-size: 13px; }
+#page-dice .scene { width: 180px; height: 180px; perspective: 1000px; margin: auto; }
+#page-dice .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 1.5s ease; cursor: pointer; }
+#page-dice .face { position: absolute; width: 180px; height: 180px; background: white; border: 3px solid #e2e8f0; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,.1); }
 
-        /* ========================================== */
-        /* 👾 BÖLÜM 3: ZOMBIE CRISIS OYUNU STİLLERİ   */
-        /* ========================================== */
-        #page-zombie {
-            background: #05070c;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 70px;
-        }
+#page-dice .dot { width: 18px; height: 18px; background: #0f172a; border-radius: 50%; position: absolute; }
+#page-dice .center { top:50%; left:50%; transform:translate(-50%,-50%); }
+#page-dice .top-left { top:18px; left:18px; }
+#page-dice .top-right { top:18px; right:18px; }
+#page-dice .middle-left { top:50%; left:18px; transform:translateY(-50%); }
+#page-dice .middle-right { top:50%; right:18px; transform:translateY(-50%); }
+#page-dice .bottom-left { bottom:18px; left:18px; }
+#page-dice .bottom-right { bottom:18px; right:18px; }
 
-        #page-zombie .header {
-            text-align: center; margin-bottom: 8px; position: relative; width: 95vw; max-width: 600px;
-        }
-        #page-zombie .shop-btn {
-            position: absolute; top: -5px; right: 0; background: #1e293b; border: 2px solid #38bdf8;
-            color: #38bdf8; font-size: 20px; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99;
-        }
-        #page-zombie .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; margin-top: 10px;
-        }
-        #page-zombie .stat-box {
-            background: #0f172a; border: 2px solid #334155; padding: 8px 2px; border-radius: 10px; text-align: center;
-            font-size: 12px; font-weight: bold; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
-        }
-        #page-zombie .stat-box.box-live { border-color: #22c55e; }
-        #page-zombie .stat-box.box-score { border-color: #38bdf8; }
-        #page-zombie .stat-box.box-coin { border-color: #f59e0b; }
-        #page-zombie .stat-box.box-wave { border-color: #ef4444; }
-        #page-zombie .stat-label { font-size: 9px; color: #9ca3af; font-weight: 800; }
-        #page-zombie .stat-val { font-size: 13px; font-weight: 800; }
-        #page-zombie .score-val { color: #38bdf8; }
-        #page-zombie .coin-val { color: #f59e0b; }
-        #page-zombie .wave-val { color: #ef4444; }
+#page-dice .front { transform:translateZ(90px); }
+#page-dice .back { transform:rotateY(180deg) translateZ(90px); }
+#page-dice .right { transform:rotateY(90deg) translateZ(90px); }
+#page-dice .left { transform:rotateY(-90deg) translateZ(90px); }
+#page-dice .top { transform:rotateX(90deg) translateZ(90px); }
+#page-dice .bottom { transform:rotateX(-90deg) translateZ(90px); }
 
-        #page-zombie #powerup-status {
-            font-size: 14px; color: #f59e0b; font-weight: 900; height: 18px; margin-top: 6px; text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
-        }
-        #page-zombie #game-wrapper { position: relative; width: 95vw; max-width: 600px; height: 78vw; max-height: 440px; transition: transform 0.05s ease-in-out; }
-        #page-zombie #game-container { width: 100%; height: 100%; background: #020617; border: 3px solid #1e293b; border-radius: 12px; overflow: hidden; position: relative; }
-        #page-zombie canvas { display: block; width: 100%; height: 100%; background: #04060e; }
+#page-dice .name { font-size: 32px; font-weight: 800; color: #2563eb; margin-top: 25px; height: 40px; }
+#page-dice .info { color: #64748b; font-size: 14px; margin-top: 5px; }
+#page-dice .footer { text-align: center; padding: 20px; color: #94a3b8; font-size: 13px; }
 
-        #page-zombie #controls { display: flex; justify-content: space-between; align-items: center; width: 95vw; max-width: 600px; margin-top: 12px; gap: 12px; padding-bottom: 15px; flex-grow: 1; }
-        #page-zombie .move-buttons { display: flex; gap: 12px; }
-        #page-zombie .btn { background: #1e293b; border: 2px solid #334155; color: white; font-size: 22px; font-weight: bold; width: 65px; height: 65px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        #page-zombie .btn:active { background: #3b82f6; border-color: #60a5fa; }
-        #page-zombie .btn-fire { background: #ef4444; border-color: #b91c1c; flex-grow: 1; font-size: 18px; border-radius: 14px; height: 65px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; cursor: pointer;}
-        #page-zombie .btn-fire:active { background: #dc2626; }
 
-        #page-zombie .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; display: none; }
-        #page-zombie .cards-container { display: flex; gap: 12px; margin-top: 15px; width: 95%; justify-content: center; flex-wrap: wrap; }
-        #page-zombie .card { background: #1e293b; border: 2px solid #3b82f6; border-radius: 12px; padding: 14px 10px; width: 140px; text-align: center; cursor: pointer; }
-        #page-zombie .card.equipped { border-color: #10b981 !important; background: #064e3b !important; }
-        #page-zombie .card.epic { border-color: #a855f7; }
-        #page-zombie .card.legendary { border-color: #f59e0b; }
-        #page-zombie .card-title { font-size: 13px; font-weight: 900; margin-bottom: 6px; }
-        #page-zombie .card-desc { font-size: 11px; color: #cbd5e1; }
-        #page-zombie .card-price { font-size: 12px; color: #f59e0b; font-weight: bold; margin-top: 4px; display: inline-block; }
-        #page-zombie .btn-close, #page-zombie .btn-restart { margin-top: 15px; background: #ef4444; border: none; color: white; padding: 8px 22px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #page-zombie .btn-restart { background: #3b82f6; }
+/* ========================================== */
+/* 👾 BÖLÜM 3: ZOMBIE CRISIS OYUNU STİLLERİ   */
+/* ========================================== */
+#page-zombie {
+    background: #05070c;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 70px;
+}
 
-        /* ========================================== */
-        /* 😎 BÖLÜM 4: FLAPPY KAAN OYUNU STİLLERİ      */
-        /* ========================================== */
-        #page-flappy {
-            background: #1a1a1a;
-            align-items: center;
-            justify-content: center;
-        }
-        #page-flappy canvas {
-            display: block;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            max-width: 100vw;
-            max-height: 100vh;
-            object-fit: contain;
-        }
-    </style>
+#page-zombie .header {
+    text-align: center; margin-bottom: 8px; position: relative; width: 95vw; max-width: 600px;
+}
+#page-zombie .shop-btn {
+    position: absolute; top: -5px; right: 0; background: #1e293b; border: 2px solid #38bdf8; color: #38bdf8; font-size: 20px; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99;
+}
+#page-zombie .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; margin-top: 10px;
+}
+#page-zombie .stat-box {
+    background: #0f172a; border: 2px solid #334155; padding: 8px 2px; border-radius: 10px; text-align: center; font-size: 12px; font-weight: bold; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
+}
+#page-zombie .stat-box.box-live { border-color: #22c55e; }
+#page-zombie .stat-box.box-score { border-color: #38bdf8; }
+#page-zombie .stat-box.box-coin { border-color: #f59e0b; }
+#page-zombie .stat-box.box-wave { border-color: #ef4444; }
+#page-zombie .stat-label { font-size: 9px; color: #9ca3af; font-weight: 800; }
+#page-zombie .stat-val { font-size: 13px; font-weight: 800; }
+#page-zombie .score-val { color: #38bdf8; }
+#page-zombie .coin-val { color: #f59e0b; }
+#page-zombie .wave-val { color: #ef4444; }
+
+#page-zombie #powerup-status {
+    font-size: 14px; color: #f59e0b; font-weight: 900; height: 18px; margin-top: 6px; text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+#page-zombie #game-wrapper { position: relative; width: 95vw; max-width: 600px; height: 78vw; max-height: 440px; transition: transform 0.05s ease-in-out; }
+#page-zombie #game-container { width: 100%; height: 100%; background: #020617; border: 3px solid #1e293b; border-radius: 12px; overflow: hidden; position: relative; }
+#page-zombie canvas { display: block; width: 100%; height: 100%; background: #04060e; }
+
+#page-zombie #controls { display: flex; justify-content: space-between; align-items: center; width: 95vw; max-width: 600px; margin-top: 12px; gap: 12px; padding-bottom: 15px; flex-grow: 1; }
+#page-zombie .move-buttons { display: flex; gap: 12px; }
+#page-zombie .btn { background: #1e293b; border: 2px solid #334155; color: white; font-size: 22px; font-weight: bold; width: 65px; height: 65px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+#page-zombie .btn:active { background: #3b82f6; border-color: #60a5fa; }
+#page-zombie .btn-fire { background: #ef4444; border-color: #b91c1c; flex-grow: 1; font-size: 18px; border-radius: 14px; height: 65px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; cursor: pointer;}
+#page-zombie .btn-fire:active { background: #dc2626; }
+
+#page-zombie .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; display: none; }
+#page-zombie .cards-container { display: flex; gap: 12px; margin-top: 15px; width: 95%; justify-content: center; flex-wrap: wrap; }
+#page-zombie .card { background: #1e293b; border: 2px solid #3b82f6; border-radius: 12px; padding: 14px 10px; width: 140px; text-align: center; cursor: pointer; }
+#page-zombie .card.equipped { border-color: #10b981 !important; background: #064e3b !important; }
+#page-zombie .card.epic { border-color: #a855f7; }
+#page-zombie .card.legendary { border-color: #f59e0b; }
+#page-zombie .card-title { font-size: 13px; font-weight: 900; margin-bottom: 6px; }
+#page-zombie .card-desc { font-size: 11px; color: #cbd5e1; }
+#page-zombie .card-price { font-size: 12px; color: #f59e0b; font-weight: bold; margin-top: 4px; display: inline-block; }
+#page-zombie .btn-close, #page-zombie .btn-restart { margin-top: 15px; background: #ef4444; border: none; color: white; padding: 8px 22px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+#page-zombie .btn-restart { background: #3b82f6; }
+
+
+/* ========================================== */
+/* 🚀 BÖLÜM 4: FLAPPY KAAN OYUNU STİLLERİ      */
+/* ========================================== */
+#page-flappy {
+    background: #1a1a1a;
+    align-items: center;
+    justify-content: center;
+}
+#page-flappy #flappyCanvas {
+    display: block;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: contain;
+}
+
+
+/* Mobil Uyum Düzenlemeleri */
+@media(max-width:768px){
+    #page-menu h1 { font-size: 30px; }
+    #page-menu .app-card { width: 100%; max-width: 280px; padding: 25px 20px; }
+    #page-dice .hero h1{ font-size:32px; }
+    #page-dice .scene, #page-dice .face{ width:140px; height:140px; }
+    #page-dice .front{transform:translateZ(70px);}
+    #page-dice .back{transform:rotateY(180deg) translateZ(70px);}
+    #page-dice .right{transform:rotateY(90deg) translateZ(70px);}
+    #page-dice .left{transform:rotateY(-90deg) translateZ(70px);}
+    #page-dice .top{transform:rotateX(90deg) translateZ(70px);}
+    #page-dice .bottom{transform:rotateX(-90deg) translateZ(70px);}
+    #page-dice .logo-placeholder { font-size: 18px; }
+}
+</style>
 </head>
 <body>
 
@@ -318,6 +336,7 @@
         </div>
     </div>
 </div>
+
 
 <div id="page-dice" class="page-section">
     <button class="btn-main-menu" onclick="navigateTo('menu')">◀ Ana Menü</button>
@@ -353,6 +372,7 @@
     <footer class="footer">© 2026 3D İsim Zarı</footer>
 </div>
 
+
 <div id="page-zombie" class="page-section">
     <button class="btn-main-menu" onclick="stopZombieGame(); navigateTo('menu');">◀ Ana Menü</button>
 
@@ -383,11 +403,11 @@
 
     <div id="game-wrapper">
         <div id="game-container">
-            <canvas id="zombieCanvas"></canvas>
+            <canvas id="gameCanvas"></canvas>
             <div id="game-over-screen" class="overlay-screen">
                 <h2 style="color: #ef4444; margin: 0; font-size: 26px;">DÜNYA İSTİLA EDİLDİ!</h2>
                 <p style="font-size: 16px; margin: 8px 0;">Final Skorun: <span id="final-score" style="color:#38bdf8; font-weight:bold;">0</span></p>
-                <button class="btn-restart" onclick="restartZombieGame()">YENİDEN SAVAŞ</button>
+                <button class="btn-restart" onclick="restartGame()">YENİDEN SAVAŞ</button>
             </div>
             <div id="upgrade-screen" class="overlay-screen">
                 <h2 style="color: #10b981; margin: 0; font-size: 22px; font-weight:900;">DALGA TEMİZLENDİ!</h2>
@@ -412,6 +432,7 @@
     </div>
 </div>
 
+
 <div id="page-flappy" class="page-section">
     <button class="btn-main-menu" onclick="stopFlappyGame(); navigateTo('menu');">◀ Ana Menü</button>
     <canvas id="flappyCanvas"></canvas>
@@ -420,139 +441,117 @@
 
 <script>
 /* ================================================================= */
-/* 🔄 1. SİSTEM: GLOBAL NAVIGATION & ROUTER                         */
+/* 🔄 EKRAN YÖNLENDİRME SİSTEMİ                                      */
 /* ================================================================= */
-let activeGame = null;
-
 function navigateTo(targetPage) {
-    // Tüm ekranları gizle
     document.querySelectorAll('.page-section').forEach(section => {
         section.classList.remove('active');
     });
 
-    // Eski oyun döngülerini ve event Listener çakışmalarını temizle
-    stopFlappyGame();
-    stopZombieGame();
-
     if (targetPage === 'menu') {
         document.getElementById('page-menu').classList.add('active');
-        activeGame = null;
     } else if (targetPage === 'dice') {
         document.getElementById('page-dice').classList.add('active');
         document.getElementById("name").textContent = "?";
         document.getElementById("cube").style.transform = "rotateX(0deg) rotateY(0deg)";
-        activeGame = 'dice';
     } else if (targetPage === 'zombie') {
         document.getElementById('page-zombie').classList.add('active');
-        activeGame = 'zombie';
-        initZombieGame(); 
+        initGame(); 
     } else if (targetPage === 'flappy') {
         document.getElementById('page-flappy').classList.add('active');
-        activeGame = 'flappy';
         initFlappyGame();
     }
 }
 
 /* ================================================================= */
-/* 🎲 2. MOTOR: 3D İSİM ZARI LOGIC SİSTEMİ                           */
+/* 🎲 1. BÖLÜM LOGIC: 3D İSİM ZARI ÇALIŞMA SİSTEMİ                  */
 /* ================================================================= */
 const cube = document.getElementById("cube");
 const nameText = document.getElementById("name");
-const names = ["Ahmet", "Mehmet", "Ayşe", "Fatma", "Ali", "Zeynep", "Kaan", "Can", "Ece", "Selin"];
+const names = ["Ahmet", "Mehmet", "Ayşe", "Fatma", "Ali", "Zeynep"];
 const rotations = {
     1:"rotateX(0deg) rotateY(0deg)", 2:"rotateX(90deg) rotateY(0deg)",
     3:"rotateY(-90deg)", 4:"rotateY(90deg)", 5:"rotateX(-90deg)", 6:"rotateY(180deg)"
 };
+
 cube.addEventListener("click",()=>{
     const random = Math.floor(Math.random()*6)+1;
     cube.style.transform = `rotateX(${720 + Math.random()*720}deg) rotateY(${720 + Math.random()*720}deg)`;
     nameText.textContent = "Seçiliyor...";
     setTimeout(()=>{
         cube.style.transform = rotations[random];
-        const chosenName = names[Math.floor(Math.random() * names.length)];
-        nameText.textContent = chosenName;
+        nameText.textContent = names[random-1];
     },1500);
 });
 
 /* ================================================================= */
-/* 👾 3. MOTOR: ZOMBIE CRISIS OYUN MOTORU                           */
+/* 👾 2. BÖLÜM LOGIC: ZOMBIE CRISIS CANVAS OYUN MOTORU KODLARI       */
 /* ================================================================= */
-const zCanvas = document.getElementById("zombieCanvas");
-const zCtx = zCanvas.getContext("2d");
-const zWrapper = document.getElementById("game-wrapper");
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const wrapper = document.getElementById("game-wrapper");
 
-zCanvas.width = 600; zCanvas.height = 480;
-let zPlayer = { x: 280, y: 430, width: 38, height: 24, speed: 5.2 };
-let zBullets = []; let invaders = []; let invaderBullets = []; let zParticles = []; let droppedPowerUps = []; 
-let zScore = 0; let zCoins = 0; let zWave = 1; let zLives = 3; let zGameOver = false;
-let isChoosingUpgrade = false; let isShopOpen = false; let zInterval;
-let currentShipSkin = "DEFAULT"; let purchasedShips = ["DEFAULT"];
+canvas.width = 600; canvas.height = 480;
+
+let player = { x: 280, y: 430, width: 38, height: 24, speed: 5.2 };
+let bullets = []; let invaders = []; let invaderBullets = []; let particles = []; let droppedPowerUps = []; 
+let score = 0; let coins = 0; let normalZombieKills = 0; let wave = 1; let lives = 3;
+let gameOver = false; let isChoosingUpgrade = false; let isShopOpen = false; let gameInterval;
+let currentShipSkin = "DEFAULT"; let purchasedShips = ["DEFAULT"]; 
 const shipsData = [
     { id: "DEFAULT", title: "Klasik Gemi", desc: "Başlangıç gemisi.", price: 0, type: "normal" },
     { id: "NEON_FIGHTER", title: "Neon Fighter", desc: "Şık plazma kanatları.", price: 50, type: "epic" },
     { id: "CRIMSON_VIPER", title: "Crimson Viper", desc: "Gelişmiş zırh panelleri.", price: 120, type: "epic" },
     { id: "VOID_SHADOW", title: "Void Shadow", desc: "Karanlık enerji motoru.", price: 250, type: "legendary" }
 ];
-let permanentDoubleShot = false; let bulletSpeedModifier = 7.5; let shakeIntensity = 0; let zGameTime = 0;
+let permanentDoubleShot = false; let bulletSpeedModifier = 7.5; let shakeIntensity = 0; let gameTime = 0;
 let baseInvaderSpeed = 1.0; let currentInvaderSpeed = 1.0; let invaderDirection = 1; let invaderShootChance = 0.013; let invaderBulletSpeed = 4.0;
 let activePowerUp = null; let powerUpTimer = 0; 
-let moveLeftActive = false; let moveRightActive = false;
+let keys = { ArrowLeft: false, ArrowRight: false }; let moveLeftActive = false; let moveRightActive = false;
 const invaderWidth = 30; const invaderHeight = 24;
 
-// Dokunmatik Kontrolleri
-document.getElementById("btnLeft").addEventListener("touchstart", (e)=>{ e.preventDefault(); moveLeftActive = true; });
-document.getElementById("btnLeft").addEventListener("touchend", ()=>{ moveLeftActive = false; });
-document.getElementById("btnRight").addEventListener("touchstart", (e)=>{ e.preventDefault(); moveRightActive = true; });
-document.getElementById("btnRight").addEventListener("touchend", ()=>{ moveRightActive = false; });
-document.getElementById("btnFire").addEventListener("touchstart", (e)=>{ e.preventDefault(); fireZombieBullet(); });
-
-function initZombieGame() {
-    zScore = 0; zWave = 1; zLives = 3; zGameTime = 0; baseInvaderSpeed = 1.0; invaderShootChance = 0.013; invaderBulletSpeed = 4.0;
-    zPlayer.speed = 5.2; bulletSpeedModifier = 7.5; permanentDoubleShot = false; zGameOver = false; isChoosingUpgrade = false; isShopOpen = false;
-    zBullets = []; invaderBullets = []; zParticles = []; droppedPowerUps = []; activePowerUp = null; powerUpTimer = 0; shakeIntensity = 0;
-    zPlayer.x = zCanvas.width / 2 - zPlayer.width / 2;
-    updateZombieUI();
+function initGame() {
+    score = 0; wave = 1; lives = 3; gameTime = 0; baseInvaderSpeed = 1.0; invaderShootChance = 0.013; invaderBulletSpeed = 4.0;
+    player.speed = 5.2; bulletSpeedModifier = 7.5; permanentDoubleShot = false; gameOver = false; isChoosingUpgrade = false; isShopOpen = false; normalZombieKills = 0;
+    bullets = []; invaderBullets = []; particles = []; droppedPowerUps = []; activePowerUp = null; powerUpTimer = 0; shakeIntensity = 0;
+    player.x = canvas.width / 2 - player.width / 2;
+    updateUI();
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("upgrade-screen").style.display = "none";
     document.getElementById("shop-screen").style.display = "none";
     createInvaders();
-    if (zInterval) clearInterval(zInterval);
-    zInterval = setInterval(zombieLoop, 1000 / 60);
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, 1000 / 60);
 }
-
-function stopZombieGame() { if (zInterval) clearInterval(zInterval); zGameOver = true; }
-
-function updateZombieUI() {
-    document.getElementById("score").innerText = zScore; document.getElementById("coins").innerText = zCoins; document.getElementById("wave").innerText = zWave;
-    let hearts = ""; for(let i = 0; i < zLives; i++) hearts += "💚"; if(zLives === 0) hearts = "💔";
+function stopZombieGame() { if (gameInterval) clearInterval(gameInterval); gameOver = true; }
+function updateUI() {
+    document.getElementById("score").innerText = score; document.getElementById("coins").innerText = coins; document.getElementById("wave").innerText = wave;
+    let hearts = ""; for(let i = 0; i < lives; i++) hearts += "💚"; if(lives === 0) hearts = "💔";
     document.getElementById("lives-display").innerText = hearts;
     const pStatus = document.getElementById("powerup-status");
     if (activePowerUp) {
         const secondsLeft = Math.ceil(powerUpTimer / 60);
         if (activePowerUp === "TRIPLE_SHOT") pStatus.innerText = `🔥 ÜÇLÜ ATEŞ (${secondsLeft}s)`;
         if (activePowerUp === "RAPID_FIRE") pStatus.innerText = `⚡ HIZLI ATEŞ (${secondsLeft}s)`;
+        if (activePowerUp === "HEAL") pStatus.innerText = `💚 CAN TOPLANDI!`;
     } else { pStatus.innerText = "ÖZELLİK: YOK"; }
 }
-
 function createInvaders() {
-    invaders = []; const rows = Math.min(3 + Math.floor(zWave / 3), 5); const cols = 8;
+    invaders = []; const rows = Math.min(3 + Math.floor(wave / 3), 4); const cols = 8;
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-            const isLeader = Math.random() < 0.2;
+            const isLeader = Math.random() < 0.25;
             invaders.push({ x: col * (invaderWidth + 22) + 50, y: row * (invaderHeight + 16) + 50, width: invaderWidth, height: invaderHeight, alive: true, isLeader: isLeader, hp: isLeader ? 2 : 1 });
         }
     }
 }
-
-function zombieLoop() { if (!isChoosingUpgrade && !isShopOpen) { updateZombie(); } drawZombie(); applyScreenShake(); }
-
+function gameLoop() { if (!isChoosingUpgrade && !isShopOpen) { update(); } draw(); applyScreenShake(); }
 function toggleShop() {
-    if (zGameOver || isChoosingUpgrade) return;
+    if (gameOver || isChoosingUpgrade) return;
     isShopOpen = !isShopOpen;
-    if (isShopOpen) { document.getElementById("shop-coins").innerText = zCoins; renderShop(); document.getElementById("shop-screen").style.display = "flex"; } 
+    if (isShopOpen) { document.getElementById("shop-coins").innerText = coins; renderShop(); document.getElementById("shop-screen").style.display = "flex"; } 
     else { document.getElementById("shop-screen").style.display = "none"; }
 }
-
 function renderShop() {
     const box = document.getElementById("shop-ships-box"); box.innerHTML = "";
     shipsData.forEach(ship => {
@@ -565,252 +564,295 @@ function renderShop() {
         cardDiv.onclick = () => handleShopClick(ship); box.appendChild(cardDiv);
     });
 }
-
 function handleShopClick(ship) {
     if (purchasedShips.includes(ship.id)) { currentShipSkin = ship.id; } 
-    else if (zCoins >= ship.price) { zCoins -= ship.price; purchasedShips.push(ship.id); currentShipSkin = ship.id; document.getElementById("shop-coins").innerText = zCoins; updateZombieUI(); }
+    else if (coins >= ship.price) { coins -= ship.price; purchasedShips.push(ship.id); currentShipSkin = ship.id; document.getElementById("shop-coins").innerText = coins; updateUI(); }
     renderShop();
 }
-
 function applyScreenShake() {
     if (shakeIntensity > 0) {
         const dx = (Math.random() - 0.5) * shakeIntensity; const dy = (Math.random() - 0.5) * shakeIntensity;
-        zWrapper.style.transform = `translate(${dx}px, ${dy}px)`; shakeIntensity *= 0.9;
-        if (shakeIntensity < 0.2) { shakeIntensity = 0; zWrapper.style.transform = "translate(0px, 0px)"; }
+        wrapper.style.transform = `translate(${dx}px, ${dy}px)`; shakeIntensity *= 0.9; 
+        if (shakeIntensity < 0.2) { shakeIntensity = 0; wrapper.style.transform = "translate(0px, 0px)"; }
     }
 }
-
-function createZombieParticles(x, y, color, count = 8) {
+function createParticles(x, y, color, count = 8) {
     for (let i = 0; i < count; i++) {
-        zParticles.push({ x: x, y: y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4 - 1, radius: Math.random() * 2 + 1, color: color, alpha: 1, decay: Math.random() * 0.02 + 0.015 });
+        particles.push({ x: x, y: y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4 - 1, radius: Math.random() * 2 + 1, color: color, alpha: 1, decay: Math.random() * 0.02 + 0.015 });
     }
 }
-
-function fireZombieBullet() {
-    if (zGameOver || isChoosingUpgrade || isShopOpen || activeGame !== 'zombie') return;
-    const bY = zPlayer.y; const bX = zPlayer.x + zPlayer.width / 2;
-    if (activePowerUp === "TRIPLE_SHOT") {
-        zBullets.push({ x: bX, y: bY, angle: -1.5 }); zBullets.push({ x: bX, y: bY, angle: 0 }); zBullets.push({ x: bX, y: bY, angle: 1.5 });
-    } else if (permanentDoubleShot) {
-        zBullets.push({ x: zPlayer.x + 4, y: bY }); zBullets.push({ x: zPlayer.x + zPlayer.width - 8, y: bY });
-    } else { zBullets.push({ x: bX - 2, y: bY }); }
-}
-
-function restartZombieGame() { initZombieGame(); }
-
-function updateZombie() {
-    if (zGameOver) return; zGameTime++;
-    currentInvaderSpeed = baseInvaderSpeed + (zGameTime / 2000);
-    if (activePowerUp) { powerUpTimer--; if (powerUpTimer <= 0) activePowerUp = null; updateZombieUI(); }
-    
-    if (moveLeftActive) zPlayer.x -= zPlayer.speed;
-    if (moveRightActive) zPlayer.x += zPlayer.speed;
-    if (zPlayer.x < 0) zPlayer.x = 0; if (zPlayer.x > zCanvas.width - zPlayer.width) zPlayer.x = zCanvas.width - zPlayer.width;
-
-    let bSpeed = activePowerUp === "RAPID_FIRE" ? 12 : bulletSpeedModifier;
-    for (let i = zBullets.length - 1; i >= 0; i--) {
-        zBullets[i].y -= bSpeed; if (zBullets[i].angle) zBullets[i].x += zBullets[i].angle;
-        if (zBullets[i].y < 0 || zBullets[i].x < 0 || zBullets[i].x > zCanvas.width) { zBullets.splice(i, 1); }
+function update() {
+    if (gameOver) return;
+    gameTime++; currentInvaderSpeed = baseInvaderSpeed + (gameTime / 1800) * 0.15; let currentShootChance = invaderShootChance + (gameTime / 1800) * 0.003;
+    if (activePowerUp) { powerUpTimer--; if (powerUpTimer <= 0) activePowerUp = null; updateUI(); }
+    if (keys.ArrowLeft || moveLeftActive) player.x -= player.speed; if (keys.ArrowRight || moveRightActive) player.x += player.speed;
+    if (player.x < 0) player.x = 0; if (player.x > canvas.width - player.width) player.x = canvas.width - player.width;
+    const bSpeed = activePowerUp === "RAPID_FIRE" ? 12 : bulletSpeedModifier;
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        bullets[i].y -= bSpeed; bullets[i].x += bullets[i].angle || 0;
+        if (bullets[i].y < 0 || bullets[i].x < 0 || bullets[i].x > canvas.width) { bullets.splice(i, 1); }
     }
-
     for (let i = droppedPowerUps.length - 1; i >= 0; i--) {
-        let pot = droppedPowerUps[i]; pot.y += 1.8;
-        if (pot.y > zCanvas.height) { droppedPowerUps.splice(i, 1); continue; }
-        if (pot.x + 16 > zPlayer.x && pot.x < zPlayer.x + zPlayer.width && pot.y + 16 > zPlayer.y && pot.y < zPlayer.y + zPlayer.height) {
-            if (pot.type === "HEAL") { if (zLives < 3) zLives++; else zScore += 50; createZombieParticles(pot.x + 8, pot.y + 8, "#22c55e", 12); } 
-            else { activePowerUp = pot.type; powerUpTimer = 350; createZombieParticles(pot.x + 8, pot.y + 8, "#f59e0b", 10); }
-            shakeIntensity = 4; updateZombieUI(); droppedPowerUps.splice(i, 1);
+        let pot = droppedPowerUps[i]; pot.y += 1.8; if (pot.y > canvas.height) { droppedPowerUps.splice(i, 1); continue; }
+        if (pot.x + pot.size > player.x && pot.x < player.x + player.width && pot.y + pot.size > player.y && pot.y < player.y + player.height) {
+            if (pot.type === "HEAL") { if (lives < 3) lives++; else score += 50; createParticles(pot.x + pot.size/2, pot.y + pot.size/2, "#22c55e", 12); } 
+            else { activePowerUp = pot.type; powerUpTimer = 300; createParticles(pot.x + pot.size/2, pot.y + pot.size/2, "#f59e0b", 10); }
+            shakeIntensity = 4; updateUI(); droppedPowerUps.splice(i, 1);
         }
     }
-
     for (let i = invaderBullets.length - 1; i >= 0; i--) {
-        invaderBullets[i].y += invaderBulletSpeed;
-        if (invaderBullets[i].y > zCanvas.height) { invaderBullets.splice(i, 1); continue; }
-        if (invaderBullets[i].x > zPlayer.x && invaderBullets[i].x < zPlayer.x + zPlayer.width && invaderBullets[i].y > zPlayer.y && invaderBullets[i].y < zPlayer.y + zPlayer.height) {
-            createZombieParticles(zPlayer.x + zPlayer.width/2, zPlayer.y, "#ef4444", 12); shakeIntensity = 12; invaderBullets.splice(i, 1); zLives--; updateZombieUI();
-            if (zLives <= 0) { zGameOver = true; document.getElementById("final-score").innerText = zScore; document.getElementById("game-over-screen").style.display = "flex"; }
+        invaderBullets[i].y += invaderBulletSpeed; if (invaderBullets[i].y > canvas.height) { invaderBullets.splice(i, 1); continue; }
+        if (invaderBullets[i].x > player.x && invaderBullets[i].x < player.x + player.width && invaderBullets[i].y > player.y && invaderBullets[i].y < player.y + player.height) {
+            createParticles(player.x + player.width/2, player.y, "#3b82f6", 12); shakeIntensity = 12; invaderBullets.splice(i, 1); handlePlayerHit(); continue;
         }
     }
-
-    let changeDir = false;
-    invaders.forEach(inv => {
-        if (!inv.alive) return; inv.x += currentInvaderSpeed * invaderDirection;
-        if (inv.x + inv.width > zCanvas.width - 15 || inv.x < 15) changeDir = true;
-        if (inv.y + inv.height > zPlayer.y) { zGameOver = true; document.getElementById("final-score").innerText = zScore; document.getElementById("game-over-screen").style.display = "flex"; }
-        if (Math.random() < invaderShootChance) invaderBullets.push({ x: inv.x + inv.width/2, y: inv.y + inv.height });
+    let hitWall = false; let livingInvaders = invaders.filter(inv => inv.alive);
+    livingInvaders.forEach(invader => {
+        invader.x += currentInvaderSpeed * invaderDirection; if (invader.x <= 10 || invader.x >= canvas.width - invader.width - 10) hitWall = true;
+        if (invader.y + invader.height >= player.y) { shakeIntensity = 15; handlePlayerHit(); createInvaders(); }
     });
-
-    if (changeDir) { invaderDirection *= -1; invaders.forEach(inv => { if(inv.alive) inv.y += 15; }); }
-
-    for (let b = zBullets.length - 1; b >= 0; b--) {
-        for (let inv = 0; inv < invaders.length; inv++) {
-            let iv = invaders[inv];
-            if (iv.alive && zBullets[b] && zBullets[b].x > iv.x && zBullets[b].x < iv.x + iv.width && zBullets[b].y > iv.y && zBullets[b].y < iv.y + iv.height) {
-                zBullets.splice(b, 1); iv.hp--; createZombieParticles(iv.x + iv.width/2, iv.y + iv.height/2, iv.isLeader ? "#a855f7" : "#ef4444", 6);
-                if (iv.hp <= 0) {
-                    iv.alive = false; zScore += iv.isLeader ? 30 : 10; zCoins += iv.isLeader ? 3 : 1; updateZombieUI();
-                    if (Math.random() < 0.16) {
-                        let types = ["TRIPLE_SHOT", "RAPID_FIRE", "HEAL"];
-                        droppedPowerUps.push({ x: iv.x + iv.width/2, y: iv.y, type: types[Math.floor(Math.random()*types.length)] });
+    if (livingInvaders.length > 0 && Math.random() < currentShootChance) {
+        let randomInvader = livingInvaders[Math.floor(Math.random() * livingInvaders.length)];
+        invaderBullets.push({ x: randomInvader.x + invaderWidth / 2, y: randomInvader.y + invaderHeight, isLeader: randomInvader.isLeader });
+    }
+    if (hitWall) { invaderDirection *= -1; invaders.forEach(invader => { if (invader.alive) invader.y += 16; }); }
+    bullets.forEach((bullet, bIndex) => {
+        invaders.forEach((invader) => {
+            if (!invader.alive) return;
+            if (bullet.x > invader.x && bullet.x < invader.x + invader.width && bullet.y > invader.y && bullet.y < invader.y + invader.height) {
+                bullets.splice(bIndex, 1); invader.hp--; const pColor = invader.isLeader ? "#ef4444" : "#22c55e"; shakeIntensity = invader.isLeader ? 5 : 3;
+                if (invader.hp > 0) { createParticles(invader.x + invaderWidth/2, invader.y + invaderHeight/2, "#ffffff", 4); } 
+                else {
+                    invader.alive = false; createParticles(invader.x + invaderWidth/2, invader.y + invaderHeight/2, pColor, invader.isLeader ? 15 : 8); score += invader.isLeader ? 60 : 20;
+                    if (invader.isLeader) { coins += 1; } else { normalZombieKills++; if (normalZombieKills >= 3) { coins += 1; normalZombieKills = 0; } }
+                    const rand = Math.random();
+                    if (invader.isLeader) {
+                        if (rand < 0.10) droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 14, type: "HEAL" });
+                        else if (rand < 0.35) droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 13, type: ["TRIPLE_SHOT", "RAPID_FIRE"][Math.floor(Math.random()*2)] });
+                    } else {
+                        if (rand < 0.02) droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 14, type: "HEAL" });
+                        else if (rand < 0.05) droppedPowerUps.push({ x: invader.x + invaderWidth/2 - 6, y: invader.y + invaderHeight, size: 13, type: ["TRIPLE_SHOT", "RAPID_FIRE"][Math.floor(Math.random()*2)] });
                     }
                 }
-                break;
+                updateUI();
             }
-        }
-    }
-
-    for (let p = zParticles.length - 1; p >= 0; p--) {
-        let pt = zParticles[p]; pt.x += pt.vx; pt.y += pt.vy; pt.alpha -= pt.decay;
-        if (pt.alpha <= 0) zParticles.splice(p, 1);
-    }
-
-    if (invaders.length > 0 && invaders.every(inv => !inv.alive) && !isChoosingUpgrade) { triggerWaveClear(); }
+        });
+    });
+    for (let i = particles.length - 1; i >= 0; i--) { let p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.alpha -= p.decay; if (p.alpha <= 0) particles.splice(i, 1); }
+    if (invaders.every(invader => !invader.alive)) { openUpgradeScreen(); }
 }
-
-function triggerWaveClear() {
-    isChoosingUpgrade = true; const box = document.getElementById("cards-box"); box.innerHTML = "";
-    let options = [
-        { title: "Çift Namlu", desc: "Kalıcı çift mermi atışı.", action: () => { permanentDoubleShot = true; } },
-        { title: "Motor Gücü", desc: "Gemi hızını artırır.", action: () => { zPlayer.speed += 1.2; } },
-        { title: "Hiper Sürücü", desc: "Mermiler daha hızlı gider.", action: () => { bulletSpeedModifier += 2; } }
-    ];
-    options.sort(() => Math.random() - 0.5);
-    options.slice(0, 2).forEach(opt => {
-        const d = document.createElement("div"); d.className = "card";
-        d.innerHTML = `<div class="card-title" style="color:#10b981;">${opt.title}</div><div class="card-desc">${opt.desc}</div>`;
-        d.onclick = () => { opt.action(); isChoosingUpgrade = false; zWave++; baseInvaderSpeed += 0.25; invaderShootChance += 0.002; document.getElementById("upgrade-screen").style.display = "none"; createInvaders(); updateZombieUI(); };
-        box.appendChild(d);
+function openUpgradeScreen() {
+    isChoosingUpgrade = true; bullets = []; invaderBullets = []; droppedPowerUps = [];
+    const cardsBox = document.getElementById("cards-box"); cardsBox.innerHTML = ""; 
+    let pool = [ { id: "SPEED", title: "🚀 MOTOR AYARI", desc: "Gemi Hızı +%10", epic: false }, { id: "BULLET_SPD", title: "🎯 HIZLI NAMLU", desc: "Mermi Hızı +%15", epic: false } ];
+    if (!permanentDoubleShot && Math.random() < 0.25) pool.push({ id: "DBL_SHOT", title: "🌟 İKİLİ ATEŞ", desc: "Kalıcı Çift Mermi", epic: true });
+    else pool.push({ id: "SCORE_BNS", title: "💎 YAĞMACI", desc: "Zombilerden +10 Puan", epic: false });
+    pool.forEach(upg => {
+        const cardDiv = document.createElement("div"); cardDiv.className = `card ${upg.epic ? 'epic' : ''}`;
+        cardDiv.innerHTML = `<div class="card-title" style="color: ${upg.epic ? '#a855f7' : '#3b82f6'}">${upg.title}</div><div class="card-desc">${upg.desc}</div>`;
+        cardDiv.onclick = () => selectUpgrade(upg.id); cardsBox.appendChild(cardDiv);
     });
     document.getElementById("upgrade-screen").style.display = "flex";
 }
-
-function drawZombie() {
-    zCtx.clearRect(0, 0, zCanvas.width, zCanvas.height);
-    zCtx.fillStyle = "rgba(255,255,255,0.15)";
-    for(let i=0; i<15; i++) zCtx.fillRect((i*47 + zGameTime/2)%zCanvas.width, (i*83)%zCanvas.height, 2, 2);
-
-    if(currentShipSkin === "VOID_SHADOW") zCtx.fillStyle = "#a855f7";
-    else if(currentShipSkin === "CRIMSON_VIPER") zCtx.fillStyle = "#ef4444";
-    else if(currentShipSkin === "NEON_FIGHTER") zCtx.fillStyle = "#38bdf8";
-    else zCtx.fillStyle = "#3b82f6";
-    
-    zCtx.fillRect(zPlayer.x, zPlayer.y, zPlayer.width, zPlayer.height);
-    zCtx.fillStyle = "#ffffff"; zCtx.fillRect(zPlayer.x + zPlayer.width/2 - 2, zPlayer.y - 4, 4, 4);
-
-    zCtx.fillStyle = activePowerUp === "RAPID_FIRE" ? "#f59e0b" : "#60a5fa";
-    zBullets.forEach(b => zCtx.fillRect(b.x, b.y, 4, 10));
-
-    invaders.forEach(inv => {
-        if (!inv.alive) return;
-        zCtx.fillStyle = inv.isLeader ? "#a855f7" : "#22c55e";
-        zCtx.fillRect(inv.x, inv.y, inv.width, inv.height);
-        zCtx.fillStyle = "#000"; zCtx.fillRect(inv.x + 5, inv.y + 4, 4, 4); zCtx.fillRect(inv.x + inv.width - 9, inv.y + 4, 4, 4);
-    });
-
-    zCtx.fillStyle = "#ef4444"; invaderBullets.forEach(ib => zCtx.fillRect(ib.x, ib.y, 4, 8));
-
-    droppedPowerUps.forEach(pot => {
-        zCtx.fillStyle = pot.type === "HEAL" ? "#22c55e" : "#f59e0b";
-        zCtx.fillRect(pot.x, pot.y, 16, 16);
-    });
-
-    zCtx.forEach ? null : zParticles.forEach(pt => {
-        zCtx.fillStyle = pt.color; zCtx.globalAlpha = pt.alpha;
-        zCtx.beginPath(); zCtx.arc(pt.x, pt.y, pt.radius, 0, Math.PI*2); zCtx.fill();
-    });
-    zCtx.globalAlpha = 1.0;
+function selectUpgrade(id) {
+    if (id === "SPEED") player.speed *= 1.10; if (id === "BULLET_SPD") bulletSpeedModifier += 1.2; if (id === "DBL_SHOT") permanentDoubleShot = true;
+    wave++; baseInvaderSpeed += 0.35; invaderShootChance += 0.006; invaderBulletSpeed += 0.35;
+    isChoosingUpgrade = false; document.getElementById("upgrade-screen").style.display = "none"; updateUI(); createInvaders();
 }
+function handlePlayerHit() {
+    lives--; updateUI(); bullets = []; invaderBullets = []; droppedPowerUps = []; activePowerUp = null; powerUpTimer = 0; player.x = canvas.width / 2 - player.width / 2;
+    if (lives <= 0) endGame();
+}
+function drawPlayerShip() {
+    ctx.save(); let baseColor = activePowerUp ? "#f59e0b" : "#3b82f6"; ctx.shadowBlur = activePowerUp ? 15 : 6; ctx.shadowColor = baseColor;
+    if (currentShipSkin === "DEFAULT") {
+        ctx.fillStyle = baseColor; ctx.fillRect(player.x, player.y + 6, player.width, player.height - 6); ctx.fillRect(player.x + 10, player.y, player.width - 20, 6);
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(player.x + player.width/2 - 2, player.y + 4, 4, 4);
+    } else if (currentShipSkin === "NEON_FIGHTER") {
+        ctx.fillStyle = activePowerUp ? "#f59e0b" : "#06b6d4"; ctx.shadowColor = ctx.fillStyle;
+        ctx.beginPath(); ctx.moveTo(player.x + player.width / 2, player.y); ctx.lineTo(player.x + player.width, player.y + player.height); ctx.lineTo(player.x, player.y + player.height); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(player.x - 3, player.y + 12, 4, 12); ctx.fillRect(player.x + player.width - 1, player.y + 12, 4, 12);
+    } else if (currentShipSkin === "CRIMSON_VIPER") {
+        ctx.fillStyle = activePowerUp ? "#f59e0b" : "#f43f5e"; ctx.shadowColor = ctx.fillStyle;
+        ctx.fillRect(player.x, player.y + 4, 10, player.height - 4); ctx.fillRect(player.x + player.width - 10, player.y + 4, 10, player.height - 4);
+        ctx.fillStyle = "#1e293b"; ctx.fillRect(player.x + 10, player.y + 12, player.width - 20, 6);
+        ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.moveTo(player.x + player.width/2, player.y - 2); ctx.lineTo(player.x + player.width/2 + 6, player.y + 12); ctx.lineTo(player.x + player.width/2 - 6, player.y + 12); ctx.closePath(); ctx.fill();
+    } else if (currentShipSkin === "VOID_SHADOW") {
+        ctx.fillStyle = activePowerUp ? "#f59e0b" : "#a855f7"; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 20;
+        ctx.beginPath(); ctx.moveTo(player.x + player.width/2, player.y); ctx.lineTo(player.x + player.width + 5, player.y + player.height - 4); ctx.lineTo(player.x + player.width / 2, player.y + player.height); ctx.lineTo(player.x - 5, player.y + player.height - 4); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#38bdf8"; ctx.fillRect(player.x + 8, player.y + player.height, 4, 6); ctx.fillRect(player.x + player.width - 12, player.y + player.height, 4, 6);
+    }
+    if (permanentDoubleShot) { ctx.fillStyle = "#ffffff"; ctx.fillRect(player.x + 2, player.y - 5, 3, 6); ctx.fillRect(player.x + player.width - 5, player.y - 5, 3, 6); }
+    ctx.restore();
+}
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); if (!gameOver) drawPlayerShip();
+    ctx.fillStyle = activePowerUp === "TRIPLE_SHOT" ? "#f59e0b" : "#38bdf8"; ctx.shadowColor = ctx.fillStyle;
+    bullets.forEach(bullet => { ctx.fillRect(bullet.x, bullet.y, 3.5, 10); });
+    droppedPowerUps.forEach(pot => {
+        if (pot.type === "HEAL") { ctx.fillStyle = "#22c55e"; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12; ctx.fillRect(pot.x, pot.y, pot.size, pot.size); ctx.fillStyle = "#ffffff"; ctx.font = "bold 11px monospace"; ctx.fillText("♥", pot.x + 2, pot.y + 11); } 
+        else { ctx.fillStyle = pot.type === "TRIPLE_SHOT" ? "#f59e0b" : "#a855f7"; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10; ctx.fillRect(pot.x, pot.y, pot.size, pot.size); ctx.fillStyle = "#ffffff"; ctx.font = "bold 10px monospace"; ctx.fillText(pot.type === "TRIPLE_SHOT" ? "T" : "H", pot.x + 3, pot.y + 10); }
+    });
+    invaderBullets.forEach(ib => { ctx.fillStyle = ib.isLeader ? "#ef4444" : "#a855f7"; ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 4; ctx.fillRect(ib.x - 1, ib.y, 4, 11); });
+    invaders.forEach(invader => {
+        if (!invader.alive) return;
+        ctx.fillStyle = invader.isLeader ? "#ef4444" : "#22c55e"; ctx.shadowColor = ctx.fillStyle;
+        if (invader.isLeader && invader.hp === 1) { ctx.fillStyle = "#f87171"; ctx.shadowBlur = 12; } else { ctx.shadowBlur = invader.isLeader ? 10 : 4; }
+        ctx.fillRect(invader.x + 3, invader.y, invader.width - 6, invader.height); let armOffset = Math.sin(gameTime * 0.15) * 2;
+        ctx.fillRect(invader.x, invader.y + 8 + armOffset, 4, 7); ctx.fillRect(invader.x + invader.width - 4, invader.y + 8 + armOffset, 4, 7);
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(invader.x + 6, invader.y + 5, 4, 4); ctx.fillRect(invader.x + invader.width - 10, invader.y + 5, 4, 4);
+    });
+    particles.forEach(p => { ctx.save(); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.shadowBlur = 0; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill(); ctx.restore(); });
+    ctx.shadowBlur = 0; 
+}
+function fireBullet() {
+    if (gameOver || isChoosingUpgrade || isShopOpen || !document.getElementById('page-zombie').classList.contains('active')) return;
+    if (activePowerUp === "TRIPLE_SHOT") {
+        if (bullets.length < 9) { bullets.push({ x: player.x + player.width / 2 - 1, y: player.y - 6, angle: 0 }); bullets.push({ x: player.x + 4, y: player.y - 2, angle: -1.3 }); bullets.push({ x: player.x + player.width - 6, y: player.y - 2, angle: 1.3 }); }
+    } else if (activePowerUp === "RAPID_FIRE" || permanentDoubleShot) {
+        if (bullets.length < 6) { bullets.push({ x: player.x + 4, y: player.y - 5, angle: 0 }); bullets.push({ x: player.x + player.width - 8, y: player.y - 5, angle: 0 }); }
+    } else { if (bullets.length < 4) bullets.push({ x: player.x + player.width / 2 - 1, y: player.y - 6, angle: 0 }); }
+}
+function endGame() { gameOver = true; clearInterval(gameInterval); document.getElementById("final-score").innerText = score; document.getElementById("game-over-screen").style.display = "flex"; }
+function restartGame() { initGame(); }
+
+// KLAVYE ALTYAPISI (ZOMBIE)
+document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") keys.ArrowLeft = true;
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.ArrowRight = true;
+    if (e.key === " " || e.key === "Spacebar") {
+        if(document.getElementById('page-zombie').classList.contains('active')) { e.preventDefault(); fireBullet(); }
+    }
+});
+document.addEventListener("keyup", (e) => {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") keys.ArrowLeft = false;
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.ArrowRight = false;
+});
+
+// ZOMBIE MOBIL BUTON EVENTLERI
+document.getElementById("btnLeft").addEventListener("touchstart", (e) => { e.preventDefault(); moveLeftActive = true; });
+document.getElementById("btnLeft").addEventListener("touchend", () => moveLeftActive = false);
+document.getElementById("btnLeft").addEventListener("mousedown", () => moveLeftActive = true);
+document.getElementById("btnLeft").addEventListener("mouseup", () => moveLeftActive = false);
+document.getElementById("btnRight").addEventListener("touchstart", (e) => { e.preventDefault(); moveRightActive = true; });
+document.getElementById("btnRight").addEventListener("touchend", () => moveRightActive = false);
+document.getElementById("btnRight").addEventListener("mousedown", () => moveRightActive = true);
+document.getElementById("btnRight").addEventListener("mouseup", () => moveRightActive = false);
+document.getElementById("btnFire").addEventListener("touchstart", (e) => { e.preventDefault(); fireBullet(); });
+document.getElementById("btnFire").addEventListener("mousedown", fireBullet);
+
 
 /* ================================================================= */
-/* 😎 4. MOTOR: FLAPPY KAAN ENTEGRE CANVAS MOTORU                    */
+/* 🚀 3. BÖLÜM LOGIC: FLAPPY KAAN OYUN MOTORU                         */
 /* ================================================================= */
 const fCanvas = document.getElementById("flappyCanvas");
 const fCtx = fCanvas.getContext("2d");
-
-fCanvas.width = 800;
-fCanvas.height = 600;
+fCanvas.width = 800; fCanvas.height = 600;
 
 const playerImg = new Image();
-playerImg.src = "ben.png.jpg";
+playerImg.src = "ben.png.jpg"; 
 let imgLoaded = false;
 playerImg.onload = () => { imgLoaded = true; };
 
 let bird = { x: 150, y: 250, width: 75, height: 75, velocity: 0, gravity: 0.4, jumpStrength: -7.5, angle: 0 };
-let pipes = []; let clouds = []; let stars = []; let score = 0;
-let highScore = localStorage.getItem("flappyKaanHighScore") || 0;
-let fGameOver = false; let isNight = false; let flappyReqFrame;
+let pipes = []; let clouds = []; let stars = [];
+let fScore = 0; let fHighScore = localStorage.getItem("flappyKaanHighScore") || 0;
+let fGameOver = false; let isNight = false; let flappyAnimationId = null;
 
 function initFlappyGame() {
     bird.y = 250; bird.velocity = 0; bird.angle = 0;
-    pipes = []; score = 0; fGameOver = false;
-    isNight = Math.random() > 0.5; clouds = []; stars = [];
+    pipes = []; fScore = 0; fGameOver = false;
+    initFlappyEnvironment();
     
-    for(let i = 0; i < 5; i++) {
-        clouds.push({
-            x: Math.random() * fCanvas.width * 1.5,
-            y: Math.random() * 150 + 30,
-            speed: Math.random() * 0.5 + 0.2,
-            size: Math.random() * 30 + 20
-        });
-    }
-    if(isNight) {
-        for(let i = 0; i < 30; i++) {
-            stars.push({ x: Math.random() * fCanvas.width, y: Math.random() * 300, size: Math.random() * 2 + 1 });
-        }
-    }
-    if (flappyReqFrame) cancelAnimationFrame(flappyReqFrame);
-    flappyReqFrame = requestAnimationFrame(flappyLoop);
+    if(flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
+    flappyAnimationId = requestAnimationFrame(flappyGameLoop);
 }
 
-function stopFlappyGame() { if (flappyReqFrame) cancelAnimationFrame(flappyReqFrame); fGameOver = true; }
+function stopFlappyGame() {
+    if(flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
+    fGameOver = true;
+}
 
-function flappyJump() { if (!fGameOver) bird.velocity = bird.jumpStrength; }
+function initFlappyEnvironment() {
+    isNight = Math.random() > 0.5; clouds = []; stars = [];
+    for(let i = 0; i < 5; i++) {
+        clouds.push({ x: Math.random() * fCanvas.width * 1.5, y: Math.random() * 150 + 30, speed: Math.random() * 0.5 + 0.2, size: Math.random() * 30 + 20 });
+    }
+    if(isNight) {
+        for(let i = 0; i < 30; i++) { stars.push({ x: Math.random() * fCanvas.width, y: Math.random() * 300, size: Math.random() * 2 + 1 }); }
+    }
+}
 
-function createPipe() {
-    const gap = 210;
-    const minHeight = 50;
-    const maxHeight = fCanvas.height - gap - minHeight - 100;
+function flappyJump() { if (!fGameOver) { bird.velocity = bird.jumpStrength; } }
+
+// FLAPPY KONTROL TETİKLEYİCİLERİ
+document.addEventListener("keydown", (e) => {
+    if (!document.getElementById('page-flappy').classList.contains('active')) return;
+    if (e.code === "Space" || e.code === "ArrowUp") { e.preventDefault(); flappyJump(); }
+    if (e.key === "r" || e.key === "R") { initFlappyGame(); }
+});
+fCanvas.addEventListener("click", flappyJump);
+fCanvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    if (!document.getElementById('page-flappy').classList.contains('active')) return;
+    if (fGameOver) { initFlappyGame(); } else { flappyJump(); }
+}, { passive: false });
+
+function createFlappyPipe() {
+    const gap = 210; const minHeight = 50; const maxHeight = fCanvas.height - gap - minHeight - 100;
     const topHeight = Math.random() * maxHeight + minHeight;
     pipes.push({ x: fCanvas.width, width: 85, topHeight: topHeight, bottomY: topHeight + gap, scored: false });
 }
 
-// Flappy Boru Zamanlayıcısı Kontrolü
-let fPipeTimer = 0;
+// Düzenli boru üretimi zamanlaması
+let flappyPipeTimer = 0;
 
-function flappyLoop() {
-    if (activeGame !== 'flappy') return;
-
-    // Güncelleme (Update) kısmı
+function flappyGameLoop() {
     if (!fGameOver) {
-        fPipeTimer++;
-        if (fPipeTimer % 150 === 0) createPipe();
-
-        clouds.forEach(c => {
-            c.x -= c.speed;
-            if(c.x + c.size * 2 < 0) c.x = fCanvas.width + 50;
-        });
-
-        bird.velocity += bird.gravity;
-        bird.y += bird.velocity;
-
-        if (bird.y < 0 || bird.y + bird.height > fCanvas.height) fGameOver = true;
-
-        pipes.forEach(pipe => {
-            pipe.x -= 3.2;
-            const topPipe = { x: pipe.x, y: 0, width: pipe.width, height: pipe.topHeight };
-            const bottomPipe = { x: pipe.x, y: pipe.bottomY, width: pipe.width, height: fCanvas.height - pipe.bottomY };
-
-            if (collision(bird, topPipe) || collision(bird, bottomPipe)) fGameOver = true;
-
-            if (!pipe.scored && pipe.x + pipe.width < bird.x) {
-                score++; pipe.scored = true;
-                if(score > highScore) { highScore = score; localStorage.setItem("flappyKaanHighScore", highScore); }
-            }
-        });
-        pipes = pipes.filter(pipe => pipe.x + pipe.width > -100);
+        flappyPipeTimer++;
+        if(flappyPipeTimer % 150 === 0) { createFlappyPipe(); } // Yaklaşık 2.5 saniyede bir boru üretir
+        updateFlappy();
     }
+    drawFlappy();
+    if (document.getElementById('page-flappy').classList.contains('active')) {
+        flappyAnimationId = requestAnimationFrame(flappyGameLoop);
+    }
+}
 
-    // Çizim (Draw) kısmı
+function updateFlappy() {
+    clouds.forEach(c => { c.x -= c.speed; if(c.x + c.size * 2 < 0) c.x = fCanvas.width + 50; });
+    bird.velocity += bird.gravity; bird.y += bird.velocity;
+    if (bird.y < 0 || bird.y + bird.height > fCanvas.height) { fGameOver = true; }
+
+    pipes.forEach(pipe => {
+        pipe.x -= 3.2;
+        const topPipe = { x: pipe.x, y: 0, width: pipe.width, height: pipe.topHeight };
+        const bottomPipe = { x: pipe.x, y: pipe.bottomY, width: pipe.width, height: fCanvas.height - pipe.bottomY };
+        
+        if (collisionFlappy(bird, topPipe) || collisionFlappy(bird, bottomPipe)) { fGameOver = true; }
+        if (!pipe.scored && pipe.x + pipe.width < bird.x) {
+            fScore++; pipe.scored = true;
+            if(fScore > fHighScore) { fHighScore = fScore; localStorage.setItem("flappyKaanHighScore", fHighScore); }
+        }
+    });
+    pipes = pipes.filter(pipe => pipe.x + pipe.width > -100);
+}
+
+function collisionFlappy(a, b) {
+    const padding = 12;
+    return ( a.x + padding < b.x + b.width && a.x + a.width - padding > b.x && a.y + padding < b.y + b.height && a.y + a.height - padding > b.y );
+}
+
+function drawFlappyPipe(x, y, width, height, isTop) {
+    let grad = fCtx.createLinearGradient(x, 0, x + width, 0);
+    grad.addColorStop(0, "#73da2c"); grad.addColorStop(0.3, "#9eff6b"); grad.addColorStop(0.7, "#58b31d"); grad.addColorStop(1, "#3c8210");
+    fCtx.fillStyle = grad; fCtx.fillRect(x, y, width, height);
+    fCtx.strokeStyle = "#1e4707"; fCtx.lineWidth = 4; fCtx.strokeRect(x, y, width, height);
+    let capHeight = 30; let capX = x - 6; let capWidth = width + 12; let capY = isTop ? (y + height - capHeight) : y;
+    fCtx.fillRect(capX, capY, capWidth, capHeight); fCtx.strokeRect(capX, capY, capWidth, capHeight);
+}
+
+function drawFlappy() {
     if(isNight) {
         let nightGrad = fCtx.createLinearGradient(0, 0, 0, fCanvas.height);
         nightGrad.addColorStop(0, "#0c1020"); nightGrad.addColorStop(1, "#1d2646"); fCtx.fillStyle = nightGrad;
@@ -828,35 +870,14 @@ function flappyLoop() {
     fCtx.fillStyle = isNight ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.65)";
     clouds.forEach(c => {
         fCtx.beginPath(); fCtx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
-        fCtx.arc(c.x + c.size * 0.6, c.y - c.size * 0.2, c.size * 1.2, 0, Math.PI * 2);
-        fCtx.arc(c.x + c.size * 1.3, c.y, c.size * 0.8, 0, Math.PI * 2); fCtx.fill();
+        fCtx.arc(c.x + c.size * 0.6, c.y - c.size * 0.2, c.size * 1.2, 0, Math.PI * 2); fCtx.arc(c.x + c.size * 1.3, c.y, c.size * 0.8, 0, Math.PI * 2); fCtx.fill();
     });
 
     pipes.forEach(pipe => {
-        drawFlappyPipe(pipe.x, 0, pipe.width, pipe.topHeight, true);
-        drawFlappyPipe(pipe.x, pipe.bottomY, pipe.width, fCanvas.height - pipe.bottomY, false);
+        drawFlappyPipe(pipe.x, 0, pipe.width, pipe.topHeight, true); drawFlappyPipe(pipe.x, pipe.bottomY, pipe.width, fCanvas.height - pipe.bottomY, false);
     });
 
-    drawFlappyBird();
-
-    fCtx.fillStyle = "white"; fCtx.strokeStyle = "black"; fCtx.lineWidth = 6; fCtx.font = "bold 50px Arial"; fCtx.textAlign = "center";
-    fCtx.strokeText(score, fCanvas.width / 2, 70); fCtx.fillText(score, fCanvas.width / 2, 70);
-
-    if (fGameOver) {
-        fCtx.fillStyle = "rgba(0, 0, 0, 0.65)"; fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
-        fCtx.fillStyle = "#2e3440"; fCtx.strokeStyle = "#4c566a"; fCtx.lineWidth = 5;
-        fCtx.roundRect ? fCtx.roundRect(fCanvas.width / 2 - 175, 130, 350, 260, 15) : fCtx.fillRect(fCanvas.width / 2 - 175, 130, 350, 260);
-        fCtx.fill(); fCtx.stroke();
-        fCtx.fillStyle = "#ff5e57"; fCtx.font = "bold 40px Arial"; fCtx.fillText("OYUN BİTTİ", fCanvas.width / 2, 185);
-        fCtx.fillStyle = "#e5e9f0"; fCtx.font = "24px Arial"; fCtx.fillText("Skorun: " + score, fCanvas.width / 2, 240);
-        fCtx.fillStyle = "#ebcb8b"; fCtx.fillText("En Yüksek Skor: " + highScore, fCanvas.width / 2, 280);
-        fCtx.fillStyle = "#a3be8c"; fCtx.font = "italic 18px Arial"; fCtx.fillText("Yeniden başlamak için Ekrana Dokun veya 'R'ye bas", fCanvas.width / 2, 345);
-    }
-
-    flappyReqFrame = requestAnimationFrame(flappyLoop);
-}
-
-function drawFlappyBird() {
+    // Kuş / Kaan Çizimi
     fCtx.save();
     let centerX = bird.x + bird.width / 2; let centerY = bird.y + bird.height / 2;
     fCtx.translate(centerX, centerY);
@@ -864,64 +885,25 @@ function drawFlappyBird() {
     fCtx.rotate(bird.angle);
     fCtx.beginPath(); fCtx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); fCtx.clip();
 
-    if (imgLoaded) {
-        fCtx.drawImage(playerImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
-    } else {
-        fCtx.fillStyle = "#ffca28"; fCtx.beginPath(); fCtx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); fCtx.fill();
-        fCtx.fillStyle = "#000"; fCtx.font = "38px Arial"; fCtx.textAlign = "center"; fCtx.textBaseline = "middle"; fCtx.fillText("😎", 0, 2);
-    }
+    if (imgLoaded) { fCtx.drawImage(playerImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height); } 
+    else { fCtx.fillStyle = "#ffca28"; fCtx.beginPath(); fCtx.arc(0, 0, bird.width / 2, 0, Math.PI * 2); fCtx.fill(); fCtx.fillStyle = "#000"; fCtx.font = "38px Arial"; fCtx.textAlign = "center"; fCtx.textBaseline = "middle"; fCtx.fillText("😎", 0, 2); }
     fCtx.restore();
-}
 
-function drawFlappyPipe(x, y, width, height, isTop) {
-    let grad = fCtx.createLinearGradient(x, 0, x + width, 0);
-    grad.addColorStop(0, "#73da2c"); grad.addColorStop(0.3, "#9eff6b"); grad.addColorStop(0.7, "#58b31d"); grad.addColorStop(1, "#3c8210");
-    fCtx.fillStyle = grad; fCtx.fillRect(x, y, width, height);
-    fCtx.strokeStyle = "#1e4707"; fCtx.lineWidth = 4; fCtx.strokeRect(x, y, width, height);
-    let capHeight = 30; let capX = x - 6; let capWidth = width + 12; let capY = isTop ? (y + height - capHeight) : y;
-    fCtx.fillRect(capX, capY, capWidth, capHeight); fCtx.strokeRect(capX, capY, capWidth, capHeight);
-}
+    // Skor Çizimi
+    fCtx.fillStyle = "white"; fCtx.strokeStyle = "black"; fCtx.lineWidth = 6; fCtx.font = "bold 50px Arial"; fCtx.textAlign = "center";
+    fCtx.strokeText(fScore, fCanvas.width / 2, 70); fCtx.fillText(fScore, fCanvas.width / 2, 70);
 
-function collision(a, b) {
-    const padding = 12;
-    return (a.x + padding < b.x + b.width && a.x + a.width - padding > b.x && a.y + padding < b.y + b.height && a.y + a.height - padding > b.y);
-}
-
-/* ================================================================= */
-/* 💻 GLOBAL KLAVYE VE AMBİYANS EVENTLERİ                            */
-/* ================================================================= */
-window.addEventListener("keydown", (e) => {
-    // Zombie Oyunu Klavye Kontrolleri
-    if (activeGame === 'zombie') {
-        if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLeftActive = true;
-        if(e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveRightActive = true;
-        if(e.key === " " || e.key === "Enter") fireZombieBullet();
+    if (fGameOver) {
+        fCtx.fillStyle = "rgba(0, 0, 0, 0.65)"; fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+        fCtx.fillStyle = "#2e3440"; fCtx.strokeStyle = "#4c566a"; fCtx.lineWidth = 5;
+        fCtx.roundRect ? fCtx.roundRect(fCanvas.width / 2 - 175, 130, 350, 260, 15) : fCtx.fillRect(fCanvas.width / 2 - 175, 130, 350, 260);
+        fCtx.fill(); fCtx.stroke();
+        fCtx.fillStyle = "#ff5e57"; fCtx.font = "bold 40px Arial"; fCtx.fillText("OYUN BİTTİ", fCanvas.width / 2, 185);
+        fCtx.fillStyle = "#e5e9f0"; fCtx.font = "24px Arial"; fCtx.fillText("Skorun: " + fScore, fCanvas.width / 2, 240);
+        fCtx.fillStyle = "#ebcb8b"; fCtx.font = "24px Arial"; fCtx.fillText("En Yüksek Skor: " + fHighScore, fCanvas.width / 2, 280);
+        fCtx.fillStyle = "#a3be8c"; fCtx.font = "italic 15px Arial"; fCtx.fillText("Yeniden başlamak için Ekrana Dokun veya 'R'ye bas", fCanvas.width / 2, 345);
     }
-    // Flappy Oyun Klavye Kontrolleri
-    if (activeGame === 'flappy') {
-        if (e.code === "Space" || e.code === "ArrowUp") { e.preventDefault(); flappyJump(); }
-        if (e.key === "r" || e.key === "R") { initFlappyGame(); }
-    }
-});
-
-window.addEventListener("keyup", (e) => {
-    if (activeGame === 'zombie') {
-        if(e.key === "ArrowLeft" || e.key === "a" || e.key === "A") moveLeftActive = false;
-        if(e.key === "ArrowRight" || e.key === "d" || e.key === "D") moveRightActive = false;
-    }
-});
-
-// Canvas Tıklama (Mouse) Bağlantıları
-fCanvas.addEventListener("click", () => { if (activeGame === 'flappy') flappyJump(); });
-zCanvas.addEventListener("click", () => { if (activeGame === 'zombie') fireZombieBullet(); });
-
-// Mobil Dokunmatik (Touch) Tetikleyicileri
-fCanvas.addEventListener("touchstart", (e) => {
-    if (activeGame !== 'flappy') return;
-    e.preventDefault();
-    if (fGameOver) initFlappyGame(); else flappyJump();
-}, { passive: false });
+}
 </script>
-
 </body>
 </html>
